@@ -21,6 +21,8 @@ public class bowScript : MonoBehaviour {
 
 		arrow = Resources.Load("Arrow") as GameObject;
 		fullDrawTimeInFPS = fullDrawTimeInSec * Application.targetFrameRate;
+
+		EventManager.AddListener("Arrow Gone", ReloadArrow);
 	}
 
 	// Update is called once per frame
@@ -47,6 +49,7 @@ public class bowScript : MonoBehaviour {
 
 				newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
 				drawForce = 0;
+				aiming = false;
 			}
 		}
 	}
@@ -59,4 +62,9 @@ public class bowScript : MonoBehaviour {
 
         transform.eulerAngles = new Vector3(0, 0, angle);
     }
+
+	void ReloadArrow()
+	{
+		aiming = true;
+	}
 }

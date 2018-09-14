@@ -5,6 +5,7 @@ using UnityEngine;
 public class lineRenderScript : MonoBehaviour {
 
 	LineRenderer lr;
+	Renderer rend;
 
 	public float velocity;
 	public float angle;
@@ -19,6 +20,7 @@ public class lineRenderScript : MonoBehaviour {
 	{
 		lr = GetComponent<LineRenderer>();
 		g = Mathf.Abs(Physics2D.gravity.y);
+		rend = GetComponent<Renderer>();
 
 		RenderArc();	
 	}
