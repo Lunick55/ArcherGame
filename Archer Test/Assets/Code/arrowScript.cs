@@ -6,24 +6,28 @@ public class arrowScript : MonoBehaviour {
 
 	float drawForce;
 	Rigidbody2D rb;
+	Renderer rend;
 
 	int lifeTime;
 
 	// Use this for initialization
 	void Start () 
 	{
-		lifeTime = 0;		
+		rend = GetComponent<Renderer>();
+		lifeTime = 0;	
 
+		EventManager.AddListener("DestroyArrow", DestroyArrow);	
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
 		lifeTime++;
-		if (lifeTime > 120)
+		if (rend.isVisible == false)
 		{
-			Destroy(gameObject);
-		}	
+			EventManager.FireEvent("ArrowDestroyed");
+			DestroyArrow();
+		}
 	}
 
 	private void FixedUpdate()
@@ -37,5 +41,10 @@ public class arrowScript : MonoBehaviour {
 	{
 		rb = gameObject.GetComponent<Rigidbody2D>();
 		rb.velocity = transform.right * newDrawForce;
+	}
+
+	void DestroyArrow()
+	{
+		Destroy(gameObject);
 	}
 }
