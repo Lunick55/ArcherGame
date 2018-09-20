@@ -9,7 +9,6 @@ public class lineRenderScript : MonoBehaviour {
 	public float velocity;
 	public float angle;
 	public int resolution;
-	public int extension = 1;
 
 	float g;
 	float radianAngle;
@@ -31,23 +30,34 @@ public class lineRenderScript : MonoBehaviour {
 
 	void RenderArc()
 	{
-		lr.positionCount = (resolution + extension);
+		lr.positionCount = (resolution);
 		lr.SetPositions(CalculateArcArray());
+
+		float scaleX = Mathf.Cos(Time.time) * 0.5F + 1;
+		float scaleY = Mathf.Sin(Time.time) * 0.5F + 1;
+		lr.material.SetTextureScale("_MainTex", new Vector2(2.0f, 1.0f));
 	}
 
 	Vector3[] CalculateArcArray()
 	{
-		Vector3[] arcArrray = new Vector3[resolution + extension];
-
+		//convert angle to radians
 		radianAngle = Mathf.Deg2Rad * angle;
 
+		//get the arcs total distance
 		float maxDistance = (velocity * velocity * Mathf.Sin(2 * radianAngle)) / g;
 
-		for (int i = 0; i <= (resolution + (extension - 1)); i++)
+		//create array of all the individual points
+		Vector3[] arcArrray = new Vector3[resolution];
+
+		//for each point place it on the arc
+		for (int i = 0; i <= resolution - 1; i++)
 		{
 			float t = (float)i / (float)resolution;
 			arcArrray[i] = CalculateArcPoint(t, maxDistance);
+
 		}
+
+		//lr.material.SetTextureScale("This IS Good", new Vector2(1, 0));
 
 		return arcArrray;
 	}
