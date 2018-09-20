@@ -7,19 +7,22 @@ public class arrowScript : MonoBehaviour {
 	float drawForce;
 	Rigidbody2D rb;
 
+	int lifeTime;
+
 	// Use this for initialization
 	void Start () 
 	{
+		lifeTime = 0;		
 
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		if (gameObject.GetComponent<Renderer>().isVisible == false)
+		lifeTime++;
+		if (lifeTime > 120)
 		{
 			Destroy(gameObject);
-			EventManager.FireEvent("Arrow Gone");
 		}	
 	}
 
