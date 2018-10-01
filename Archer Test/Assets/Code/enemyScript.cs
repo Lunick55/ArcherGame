@@ -31,6 +31,11 @@ public class enemyScript : MonoBehaviour {
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
+		if (col.tag == "Sentry")
+		{
+			col.GetComponent<sentryScript>().SentryStrength--;
+			DestroyEnemy();
+		}
 	}
 
 	void DestroyEnemy()

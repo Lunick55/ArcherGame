@@ -6,7 +6,7 @@ public class targetSpawner : MonoBehaviour {
 
 	GameObject target;
 	float timer = 0;
-	public float framesToSpawn;
+	public float timeToSpawn;
 
 	// Use this for initialization
 	void Start () 
@@ -17,21 +17,18 @@ public class targetSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		timer += Time.deltaTime;
+
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			GameObject newTarget = Instantiate(target) as GameObject;
-			//target.transform.position = transform.position;
 			target.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
 		}
-
-		if (timer % framesToSpawn == 0)
+		if (timer > timeToSpawn)
 		{
 			GameObject newTarget = Instantiate(target) as GameObject;
-			//target.transform.position = transform.position;
 			target.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
 			timer = 0;
 		}
-
-		timer++;
 	}
 }
