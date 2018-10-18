@@ -28,6 +28,7 @@ public class enemyScript : MonoBehaviour {
 	{
 		if (col.tag == "Arrow")
 		{
+			EventManager.FireEvent("MedFill");
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
@@ -35,6 +36,12 @@ public class enemyScript : MonoBehaviour {
 		{
 			col.GetComponent<sentryScript>().SentryStrength--;
 			DestroyEnemy();
+		}
+		if (col.tag == "Base")
+		{
+			col.GetComponent<BossAndBaseHealth>().health -= 50;
+			DestroyEnemy();
+			EventManager.FireEvent("BaseHit");
 		}
 	}
 

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Arrow
   - Sentry
+  - Barrier
+  - Base
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,8 +18,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Boss
+  - Enemy
   - 
   - 
   - 

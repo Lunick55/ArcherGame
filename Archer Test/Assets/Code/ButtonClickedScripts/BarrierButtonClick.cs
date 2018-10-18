@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SentryButtonClick : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class BarrierButtonClick : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
-	public void OnSentryClick()
+	public void OnBarrierClick()
 	{
-		Debug.Log("SENTRY BUTTON CLICK");
-		EventManager.FireEvent("SentryButtonClick");
+		Debug.Log("BARRIER BUTTON CLICK");
+		EventManager.FireEvent("BarrierButtonClick");
 	}
 
 	public void OnPointerEnter(PointerEventData data)
 	{
-		EventManager.FireEvent("ViewCostMed");
+		EventManager.FireEvent("ViewCostSmall");
 	}
 
 	public void OnPointerExit(PointerEventData data)

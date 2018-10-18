@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ArrowTestScene.unity
-    guid: 6c490eb8401e9824bb1665d4fb6c4580
+    path: Assets/Scenes/MenuScene.unity
+    guid: f80a6c1533b94954b99f8ea6245ce5a2
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/WinScene.unity
+    guid: 2969b0f72af83d149b04c855bdf2a064
+  - enabled: 1
+    path: Assets/Scenes/LoseScene.unity
+    guid: 747a14fe51426d441acfec786a7705a2
+  - enabled: 1
+    path: Assets/Scenes/MainGameScene.unity
+    guid: eceab0d7d4367474887924e202928f21
   m_configObjects: {}

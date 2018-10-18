@@ -5,36 +5,47 @@ using UnityEngine.EventSystems;
 
 public class bowScript : MonoBehaviour {
 
+	int currTime, prevTime;
+
 	public float maxVelocity;
 	public float fullDrawTimeInSec;
 
 	float fullDrawTimeInFPS;
 	float drawForce;
 	private float angle;
+	private float trueShotTimer = 0;
 
 	bool aiming = true;
 
 	Vector3 mousePos;
 
-	ParticleSystem ps;
+	public ParticleSystem ps;
+	public ParticleSystem psCharging;
+	public ParticleSystem psFullCharge;
 	GameObject arrow;
+	GameObject finalArrow;
 
 	// Use this for initialization
 	void Start ()
    {
+		prevTime = 0;
 		Application.targetFrameRate = 60;
 
 		arrow = Resources.Load("Arrow") as GameObject;
+		finalArrow = Resources.Load("FinalArrow") as GameObject;
 
 		EventManager.AddListener("BlockerButtonClick", Rest);
 		EventManager.AddListener("ArrowDestroyed", Reload);
 		EventManager.AddListener("ExitButtonClick", Reload);
 		EventManager.AddListener("ObjectPlaced", Reload);
+		EventManager.AddListener("BaseHit", Recoil);
 
 		fullDrawTimeInFPS = fullDrawTimeInSec * Application.targetFrameRate;
 
-		ps = GetComponent<ParticleSystem>();
+		//ps = GetComponent<ParticleSystem>();
 		ps.Stop();
+		psCharging.Stop();
+		psFullCharge.Stop();
 	}
 
 	// Update is called once per frame
@@ -64,8 +75,15 @@ public class bowScript : MonoBehaviour {
 			return;
 		}
 
+		if (Input.GetMouseButtonDown(0))
+		{
+			//start timer
+			trueShotTimer = 0;
+		}
 		if (Input.GetMouseButton(0))
 		{
+			trueShotTimer += Time.deltaTime;
+
 			if (drawForce < maxVelocity)
 			{
 				drawForce += maxVelocity / fullDrawTimeInFPS;
@@ -76,6 +94,7 @@ public class bowScript : MonoBehaviour {
 			else
 			{
 				ps.Stop();
+				ChargeFinalArrow();
 			}
 
 			GetComponent<lineRenderScript>().velocity = drawForce;
@@ -83,9 +102,20 @@ public class bowScript : MonoBehaviour {
 		}
 		if (Input.GetMouseButtonUp(0))
 		{
-			ps.Stop();
-
-			FireArrow();
+			if (trueShotTimer > 10)
+			{
+				Debug.Log("TRUE ARROW AWWWAAAYYY");
+				FireFinalArrow();
+			}
+			else
+			{
+				ps.Stop();
+				psCharging.Stop();
+				psFullCharge.Stop();
+				var em = psCharging.emission;
+				em.rateOverTime = 0;
+				FireArrow();
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
@@ -97,13 +127,43 @@ public class bowScript : MonoBehaviour {
 	void FireArrow()
 	{
 		GameObject newArrow = Instantiate(arrow,transform.position, transform.rotation, null) as GameObject;
-		//GameObject newArrow = Instantiate(arrow, transform) as GameObject;
-
-		//newArrow.transform.SetPositionAndRotation(transform.position, transform.rotation);
 
 		newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
 		aiming = false;
 		drawForce = 0;
+	}
+
+	void FireFinalArrow()
+	{
+		GameObject newFinalArrow = Instantiate(finalArrow, transform.position, transform.rotation, null) as GameObject;
+
+		newFinalArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
+		aiming = false;
+		drawForce = 0;
+		EventManager.FireEvent("LoadWin");
+	}
+
+	void ChargeFinalArrow()
+	{
+		currTime = Mathf.FloorToInt(trueShotTimer);
+
+		if (currTime > prevTime && trueShotTimer < 10)
+		{
+			var em = psCharging.emission;
+			em.rateOverTime = em.rateOverTime.constant  + 5;
+
+			if (psCharging.isPlaying == false)
+				psCharging.Play();
+		}
+		else if (trueShotTimer > 10)
+		{
+			psCharging.Stop();
+
+			if (psFullCharge.isPlaying == false)
+				psFullCharge.Play();
+		}
+
+		prevTime = currTime;
 	}
 
 	void Reload()
@@ -116,5 +176,14 @@ public class bowScript : MonoBehaviour {
 	{
 		Debug.Log("REST");
 		aiming = false;
+	}
+
+	void Recoil()
+	{
+		Debug.Log("Recoil");
+		drawForce = 0;
+		trueShotTimer = 0;
+		var em = psCharging.emission;
+		em.rateOverTime = 0;
 	}
 }
