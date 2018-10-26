@@ -9,7 +9,8 @@ public class currencyBarScript : MonoBehaviour {
 	public Image progressBarEarly;
 	//public Image progressBarCost;
 	private float personalTimer;
-	private float progress = 0;
+	public float progress = 0;
+	private const float MAXFILL = 1.0f;
 
 	private bool canCatchUp = false;
 	private bool canCatchDown = false;
@@ -27,6 +28,7 @@ public class currencyBarScript : MonoBehaviour {
 		EventManager.AddListener("BigFill", BigFill);
 		EventManager.AddListener("ViewCostSmall", ViewCostSmall);
 		EventManager.AddListener("ViewCostMed", ViewCostMed);
+		EventManager.AddListener("ViewCostHigh", ViewCostHigh);
 		EventManager.AddListener("ViewNoCost", ViewNoCost);
 		EventManager.AddListener("BlockerButtonClick", FullCatchUp);
 		EventManager.AddListener("ObjectPlaced", FullCatchDown);
@@ -38,6 +40,8 @@ public class currencyBarScript : MonoBehaviour {
 		CatchUp();
 		CatchDown();
 		FlashBar();
+
+		Debug.Log("PROGRESS: " + progress);
 	}
 
 	void FlashBar()
@@ -45,14 +49,15 @@ public class currencyBarScript : MonoBehaviour {
 		if (canFlash == true)
 		{
 			timer += 0.02f;
-			Debug.Log(255 * Mathf.Cos(timer));
 			progressBarEarly.color = new Color32(255, 0, 0, (byte)Mathf.Abs((255 * Mathf.Cos(timer))));
 		}
 	}
 
 	void SmallFill()
 	{
-		personalTimer = 0;
+		if(progressBarEarly.fillAmount < 1.0)
+			personalTimer = 0;
+
 		canCatchUp = true;
 		progressBarEarly.color = new Color32(0, 255, 0, 255);
 		progressBarEarly.fillAmount = progress += 0.1f;
@@ -60,7 +65,9 @@ public class currencyBarScript : MonoBehaviour {
 
 	void MedFill()
 	{
-		personalTimer = 0;
+		if (progressBarEarly.fillAmount < 1.0)
+			personalTimer = 0;
+
 		canCatchUp = true;
 		progressBarEarly.color = new Color32(0, 255, 0, 255);
 		progressBarEarly.fillAmount = progress += 0.2f;
@@ -69,7 +76,9 @@ public class currencyBarScript : MonoBehaviour {
 
 	void BigFill()
 	{
-		personalTimer = 0;
+		if (progressBarEarly.fillAmount < 1.0)
+			personalTimer = 0;
+
 		canCatchUp = true;
 		progressBarEarly.fillAmount = progressBar.fillAmount;
 		progressBarEarly.fillAmount += 0.5f;
@@ -78,7 +87,7 @@ public class currencyBarScript : MonoBehaviour {
 	//TODO: turn these into a single function that take a float Cost
 	public bool SmallCost()
 	{
-		if (progress >= 0.3f)
+		if (fToI(progress) >= fToI(0.3f))//Mathf.Approximately(progress, 0.3f) || progress > 0.3f)
 		{
 			canCatchDown = true;
 			progressBar.fillAmount = progress -= 0.3f;
@@ -88,13 +97,24 @@ public class currencyBarScript : MonoBehaviour {
 
 		return false;
 	}
-
 	public bool MedCost()
 	{
-		if (progress >= 0.5f)
+		if (fToI(progress) >= fToI(0.5f))
 		{
 			canCatchDown = true;
 			progressBar.fillAmount = progress -= 0.5f;
+			Debug.Log(progress);
+			return true;
+		}
+
+		return false;
+	}
+	public bool HighCost()
+	{
+		if (fToI(progress) >= fToI(0.8f))
+		{
+			canCatchDown = true;
+			progressBar.fillAmount = progress -= 0.8f;
 			Debug.Log(progress);
 			return true;
 		}
@@ -108,8 +128,10 @@ public class currencyBarScript : MonoBehaviour {
 			progress = 1.0f;
 
 		//progress catches up to green bar
-		if (System.Math.Round(progressBar.fillAmount, 2) != System.Math.Round(progressBarEarly.fillAmount, 2) && canCatchUp == true)
+		if (fToI(progressBar.fillAmount) != fToI(progressBarEarly.fillAmount) && canCatchUp == true)
 		{
+			canCatchDown = false;
+
 			if (personalTimer >= 1)
 			{
 				progressBar.fillAmount = (float)System.Math.Round(progressBar.fillAmount + 0.01f, 2);
@@ -127,7 +149,7 @@ public class currencyBarScript : MonoBehaviour {
 
 	void CatchDown()
 	{
-		if (System.Math.Round(progressBarEarly.fillAmount, 2) != System.Math.Round(progressBar.fillAmount, 2) && canCatchDown == true)
+		if (fToI(progressBarEarly.fillAmount) != fToI(progressBar.fillAmount) && canCatchDown == true)
 		{
 			progressBarEarly.fillAmount = (float)System.Math.Round(progressBarEarly.fillAmount - 0.01f, 2);
 			return;
@@ -153,7 +175,7 @@ public class currencyBarScript : MonoBehaviour {
 
 	void ViewCostSmall()
 	{
-		if (progress >= 0.3f)
+		if (fToI(progress) >= fToI(0.3f))
 		{
 			progressBarEarly.color = new Color32(255, 0, 0, 255);
 			progressBar.fillAmount -= 0.3f;
@@ -168,7 +190,7 @@ public class currencyBarScript : MonoBehaviour {
 	void ViewCostMed()
 	{
 		//if you have enough
-		if (progress >= 0.5f)
+		if (fToI(progress) >= fToI(0.5f))
 		{
 			progressBarEarly.color = new Color32(255, 0, 0, 255);
 			progressBar.fillAmount -= 0.5f;
@@ -176,6 +198,21 @@ public class currencyBarScript : MonoBehaviour {
 		else
 		{
 			progressBarEarly.fillAmount = 0.5f;
+			canFlash = true;
+		}
+	}
+
+	void ViewCostHigh()
+	{
+		//if you have enough
+		if (fToI(progress) >= fToI(0.8f))
+		{
+			progressBarEarly.color = new Color32(255, 0, 0, 255);
+			progressBar.fillAmount -= 0.8f;
+		}
+		else
+		{
+			progressBarEarly.fillAmount = 0.8f;
 			canFlash = true;
 		}
 	}
@@ -189,5 +226,16 @@ public class currencyBarScript : MonoBehaviour {
 			canFlash = false;
 		}
 		timer = 0;
+	}
+
+
+
+	int fToI(float fNum)
+	{
+		int iNum = 0;
+
+		iNum = (int)Mathf.Round(MAXFILL) * (int)Mathf.Round(fNum * 100);
+
+		return iNum;
 	}
 }

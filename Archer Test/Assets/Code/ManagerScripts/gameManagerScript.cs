@@ -48,6 +48,7 @@ public class gameManagerScript : MonoBehaviour {
 		EventManager.AddListener("BlockerButtonClick", OpenBlockerMenu);
 		EventManager.AddListener("SentryButtonClick", ExitSentryBlockerMenuPause);
 		EventManager.AddListener("BarrierButtonClick", ExitBarrierBlockerMenuPause);
+		EventManager.AddListener("PierceButtonClick", ExitPierceBlockerMenuResume);
 		EventManager.AddListener("ExitButtonClick", ExitBlockerMenuResume);
 		EventManager.AddListener("StartButtonClick", StartGame);
 		EventManager.AddListener("QuitButtonClick", QuitGame);
@@ -84,6 +85,14 @@ public class gameManagerScript : MonoBehaviour {
 		if (myBlockerManager.SpawnBlocker(2) == true)
 		{
 			Pause();
+			canvasScript.DisableBlockerCanvas();
+		}
+	}
+	void ExitPierceBlockerMenuResume()
+	{
+		if (myBlockerManager.SpawnBlocker(3) == true)
+		{
+			Resume();
 			canvasScript.DisableBlockerCanvas();
 		}
 	}

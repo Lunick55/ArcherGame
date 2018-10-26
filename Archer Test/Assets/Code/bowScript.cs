@@ -25,18 +25,23 @@ public class bowScript : MonoBehaviour {
 	GameObject arrow;
 	GameObject finalArrow;
 
+	string arrowType = "arrow";//get rid of this later--------------------------------------------<
+
 	// Use this for initialization
 	void Start ()
    {
 		prevTime = 0;
 		Application.targetFrameRate = 60;
 
+		//arrow = Resources.Load("Arrow") as GameObject;
 		arrow = Resources.Load("Arrow") as GameObject;
+
 		finalArrow = Resources.Load("FinalArrow") as GameObject;
 
 		EventManager.AddListener("BlockerButtonClick", Rest);
 		EventManager.AddListener("ArrowDestroyed", Reload);
 		EventManager.AddListener("ExitButtonClick", Reload);
+		EventManager.AddListener("LoadPierceArrow", SetPierce);
 		EventManager.AddListener("ObjectPlaced", Reload);
 		EventManager.AddListener("BaseHit", Recoil);
 
@@ -126,11 +131,24 @@ public class bowScript : MonoBehaviour {
 	//TODO: eventually set this up to fire different arrow types
 	void FireArrow()
 	{
-		GameObject newArrow = Instantiate(arrow,transform.position, transform.rotation, null) as GameObject;
+		if (arrowType == "arrow")
+		{
+			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
 
-		newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-		aiming = false;
-		drawForce = 0;
+			newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
+			aiming = false;
+			drawForce = 0;
+		}
+		if (arrowType == "arrowPierce")
+		{
+			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
+
+			newArrow.GetComponent<arrowPierceScript>().SetDrawForce(drawForce);
+			aiming = false;
+			drawForce = 0;
+			arrowType = "arrow";
+			arrow = Resources.Load("Arrow") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
+		}
 	}
 
 	void FireFinalArrow()
@@ -185,5 +203,13 @@ public class bowScript : MonoBehaviour {
 		trueShotTimer = 0;
 		var em = psCharging.emission;
 		em.rateOverTime = 0;
+	}
+
+	void SetPierce()
+	{
+		arrowType = "arrowPierce";
+		arrow = Resources.Load("arrowPierce") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
+		Reload();
+		Debug.Log("PIERCE LOADED CAPTAIN");
 	}
 }

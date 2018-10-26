@@ -8,6 +8,10 @@ public class targetSpawner : MonoBehaviour {
 	GameObject tentacle;
 	float timer = 0;
 	public float timeToSpawn;
+	float timeToMakeHarder;//decrease health by x every interval
+	public float difficultyInterval;
+	public float maxSpawnRate;
+	public float amountDecreased;
 
 	// Use this for initialization
 	void Start () 
@@ -20,11 +24,18 @@ public class targetSpawner : MonoBehaviour {
 	void Update () 
 	{
 		timer += Time.deltaTime;
+		timeToMakeHarder += Time.deltaTime;
 
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			GameObject newEnemy = Instantiate(tentacle) as GameObject;
 			newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
+		}
+		if (timeToSpawn >= maxSpawnRate && timeToMakeHarder > difficultyInterval)
+		{
+			Debug.Log("Spawn Rate:" + timeToSpawn);
+			timeToSpawn -= amountDecreased;
+			timeToMakeHarder = 0;
 		}
 		if (timer > timeToSpawn)
 		{
@@ -43,5 +54,10 @@ public class targetSpawner : MonoBehaviour {
 		GameObject newEnemy = Instantiate(enemy) as GameObject;
 		newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
 		timer = 0;
+	}
+
+	void IncreaseSpawnRate()
+	{
+
 	}
 }

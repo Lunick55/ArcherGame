@@ -60,6 +60,14 @@ public class BlockerManagerScript : MonoBehaviour {
 					return true;
 				}
 				break;
+			case 3:
+				if (myBlockerBar.HighCost() == true)
+				{
+					Debug.Log("PIERCE ARROW");
+					EventManager.FireEvent("LoadPierceArrow");
+					return true;
+				}
+				break;
 			default:
 				return false;
 		}
