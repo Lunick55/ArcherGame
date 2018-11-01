@@ -45,6 +45,7 @@ public class tentacleScript : MonoBehaviour
 		{
 			rb.velocity = new Vector2(0, 0);
 			EventManager.FireEvent("BaseHit");
+			CameraManager.ShakeCamera();
 		}
 	}
 

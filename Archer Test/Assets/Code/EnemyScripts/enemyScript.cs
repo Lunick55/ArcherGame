@@ -6,6 +6,7 @@ public class enemyScript : MonoBehaviour {
 
 	Rigidbody2D rb;
 	Renderer rend;
+	Animator anim;
 
 	// Use this for initialization
 	void Start () 
@@ -13,8 +14,11 @@ public class enemyScript : MonoBehaviour {
 		rend = GetComponent<Renderer>();
 		rb = GetComponent<Rigidbody2D>();
 		rb.velocity = new Vector2(-6, 0);
+
+		anim = GetComponent<Animator>();
+		anim.speed = 0.4f;
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -42,10 +46,21 @@ public class enemyScript : MonoBehaviour {
 			col.GetComponent<BossAndBaseHealth>().health -= 50;
 			DestroyEnemy();
 			EventManager.FireEvent("BaseHit");
+			CameraManager.ShakeCamera();
 		}
 	}
 
 	void DestroyEnemy()
+	{
+		//rb.isKinematic = false;
+		rb.bodyType = RigidbodyType2D.Static;
+		rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+		anim.SetBool("Dead", true);
+		anim.speed = 4;
+		//Destroy(gameObject);
+	}
+
+	public void RemoveEnemy()
 	{
 		Destroy(gameObject);
 	}
