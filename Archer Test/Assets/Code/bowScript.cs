@@ -136,7 +136,7 @@ public class bowScript : MonoBehaviour {
 			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
 
 			newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-			aiming = false;
+			//aiming = false;
 			drawForce = 0;
 		}
 		if (arrowType == "arrowPierce")
@@ -156,7 +156,7 @@ public class bowScript : MonoBehaviour {
 		GameObject newFinalArrow = Instantiate(finalArrow, transform.position, transform.rotation, null) as GameObject;
 
 		newFinalArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-		aiming = false;
+		//aiming = false;
 		drawForce = 0;
 		EventManager.FireEvent("LoadWin");
 	}

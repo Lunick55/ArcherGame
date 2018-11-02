@@ -16,7 +16,7 @@ public class enemyScript : MonoBehaviour {
 		rb.velocity = new Vector2(-6, 0);
 
 		anim = GetComponent<Animator>();
-		anim.speed = 0.4f;
+		anim.speed = 0.3f;
 	}
 
 	// Update is called once per frame
