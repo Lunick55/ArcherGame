@@ -8,14 +8,25 @@ public class sentryScript : MonoBehaviour {
 	Vector2 mousePos;
 	bool activated = false;
 	bool canPlace = true;
-	public int SentryStrength;
+	[SerializeField]
+	int SentryStrength;
+	GameObject[] childSentry;
+	int currSentry = 2;
 
 	// Use this for initialization
 	void Start () 
 	{
-		//EventManager.AddListener("WeakenSentry", WeakenSentry);
+		childSentry = new GameObject[3];
+
+		childSentry[0] = transform.GetChild(0).gameObject;
+		childSentry[1] = transform.GetChild(1).gameObject;
+		childSentry[2] = transform.GetChild(2).gameObject;
+
+		childSentry[0].GetComponent<Animator>().SetFloat("Offset", 0);
+		childSentry[1].GetComponent<Animator>().SetFloat("Offset", 0.33f);
+		childSentry[2].GetComponent<Animator>().SetFloat("Offset", 0.66f);
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -73,5 +84,12 @@ public class sentryScript : MonoBehaviour {
 	{
 		Debug.Log("IM OUT");
 		canPlace = true;
+	}
+
+	public void DamageDone()
+	{
+		Debug.Log("SENTRY DAMAGED");
+		SentryStrength--;
+		Destroy(childSentry[currSentry--]);
 	}
 }

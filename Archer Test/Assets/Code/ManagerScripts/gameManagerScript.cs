@@ -8,9 +8,6 @@ public class gameManagerScript : MonoBehaviour {
 
 	public GameObject BlockerManager;
 	BlockerManagerScript myBlockerManager;
-	public GameObject BlockerCanvas;
-	itemCanvasScript canvasScript;
-	public Button blockerButton;
 
 	private static gameManagerScript gameManager;
 
@@ -37,19 +34,11 @@ public class gameManagerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		if (BlockerCanvas != null)
-			canvasScript = BlockerCanvas.GetComponent<itemCanvasScript>();
-
 		if (BlockerManager != null)
 		{
 			myBlockerManager = BlockerManager.GetComponent<BlockerManagerScript>();
 		}
 
-		EventManager.AddListener("BlockerButtonClick", OpenBlockerMenu);
-		EventManager.AddListener("SentryButtonClick", ExitSentryBlockerMenuPause);
-		EventManager.AddListener("BarrierButtonClick", ExitBarrierBlockerMenuPause);
-		EventManager.AddListener("PierceButtonClick", ExitPierceBlockerMenuResume);
-		EventManager.AddListener("ExitButtonClick", ExitBlockerMenuResume);
 		EventManager.AddListener("StartButtonClick", StartGame);
 		EventManager.AddListener("QuitButtonClick", QuitGame);
 		EventManager.AddListener("LoadMainMenu", LoadMenu);
@@ -62,45 +51,36 @@ public class gameManagerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-
-	}
-
-	void OpenBlockerMenu()
-	{
-		Pause();
-		blockerButton.interactable = !blockerButton.interactable;
-		canvasScript.EnableBlockerCanvas();
-	}
-
-	void ExitSentryBlockerMenuPause()
-	{
-		if (myBlockerManager.SpawnBlocker(1) == true)
+		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			Pause();
-			canvasScript.DisableBlockerCanvas();
+			ExitBlockerPlaceState(2);//barrier
 		}
-	}
-	void ExitBarrierBlockerMenuPause()
-	{
-		if (myBlockerManager.SpawnBlocker(2) == true)
+		if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-			Pause();
-			canvasScript.DisableBlockerCanvas();
+			ExitBlockerPlaceState(1);//sentry
 		}
-	}
-	void ExitPierceBlockerMenuResume()
-	{
-		if (myBlockerManager.SpawnBlocker(3) == true)
+
+		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			Resume();
-			canvasScript.DisableBlockerCanvas();
+			Application.Quit();
 		}
 	}
 
-	void ExitBlockerMenuResume()
+	private static void ExitBlockerPlaceState(int blockType)
 	{
-		Resume();
-		canvasScript.DisableBlockerCanvas();
+		if (instance.myBlockerManager.SpawnBlocker(blockType) == true)
+		{
+			instance.Pause();
+			EventManager.FireEvent("ObjectSelected");
+		}
+	}
+
+	private static void ExitPierceBlockerMenuResume()
+	{
+		if (instance.myBlockerManager.SpawnBlocker(3) == true)
+		{
+			instance.Resume();
+		}
 	}
 
 	void StartGame()
@@ -136,7 +116,6 @@ public class gameManagerScript : MonoBehaviour {
 	{
 		Time.timeScale = 1.0f;
 		//enable the blocker button
-		blockerButton.interactable = !blockerButton.interactable;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
 	}
 

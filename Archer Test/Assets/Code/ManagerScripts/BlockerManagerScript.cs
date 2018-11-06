@@ -25,10 +25,6 @@ public class BlockerManagerScript : MonoBehaviour {
 		{
 			myBlockerBar = BlockerBar.GetComponent<currencyBarScript>();
 		}
-
-		//EventManager.AddListener("SentryButtonClick", SpawnSentry);
-		//EventManager.AddListener("BarrierButtonClick", SpawnBarrier);
-
 	}
 
 	// Update is called once per frame
@@ -45,7 +41,6 @@ public class BlockerManagerScript : MonoBehaviour {
 			case 1:
 				if (myBlockerBar.MedCost() == true)
 				{
-					Debug.Log("SPAWN SENTRY");
 					GameObject newSentry = Instantiate(SentryBlocker) as GameObject;
 					newSentry.transform.position = mousePos;
 					return true;
@@ -54,7 +49,6 @@ public class BlockerManagerScript : MonoBehaviour {
 			case 2:
 				if (myBlockerBar.SmallCost() == true)
 				{
-					Debug.Log("SPAWN BARRIER");
 					GameObject newBarrier = Instantiate(BarrierBlocker) as GameObject;
 					newBarrier.transform.position = mousePos;
 					return true;

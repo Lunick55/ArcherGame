@@ -30,7 +30,6 @@ public class currencyBarScript : MonoBehaviour {
 		EventManager.AddListener("ViewCostMed", ViewCostMed);
 		EventManager.AddListener("ViewCostHigh", ViewCostHigh);
 		EventManager.AddListener("ViewNoCost", ViewNoCost);
-		EventManager.AddListener("BlockerButtonClick", FullCatchUp);
 		EventManager.AddListener("ObjectPlaced", FullCatchDown);
 	}
 
@@ -41,7 +40,6 @@ public class currencyBarScript : MonoBehaviour {
 		CatchDown();
 		FlashBar();
 
-		Debug.Log("PROGRESS: " + progress);
 	}
 
 	void FlashBar()
@@ -87,11 +85,12 @@ public class currencyBarScript : MonoBehaviour {
 	//TODO: turn these into a single function that take a float Cost
 	public bool SmallCost()
 	{
-		if (fToI(progress) >= fToI(0.3f))//Mathf.Approximately(progress, 0.3f) || progress > 0.3f)
+		if (fToI(progress) >= fToI(0.3f))
 		{
+			//FullCatchUp();
 			canCatchDown = true;
+			canCatchUp = false;
 			progressBar.fillAmount = progress -= 0.3f;
-			Debug.Log(progress);
 			return true;
 		}
 
@@ -101,9 +100,10 @@ public class currencyBarScript : MonoBehaviour {
 	{
 		if (fToI(progress) >= fToI(0.5f))
 		{
+			FullCatchUp();
 			canCatchDown = true;
+			canCatchUp = false;
 			progressBar.fillAmount = progress -= 0.5f;
-			Debug.Log(progress);
 			return true;
 		}
 
@@ -113,9 +113,9 @@ public class currencyBarScript : MonoBehaviour {
 	{
 		if (fToI(progress) >= fToI(0.8f))
 		{
+			FullCatchUp();
 			canCatchDown = true;
 			progressBar.fillAmount = progress -= 0.8f;
-			Debug.Log(progress);
 			return true;
 		}
 
@@ -151,6 +151,7 @@ public class currencyBarScript : MonoBehaviour {
 	{
 		if (fToI(progressBarEarly.fillAmount) != fToI(progressBar.fillAmount) && canCatchDown == true)
 		{
+			progressBarEarly.color = new Color32(255, 0, 0, 255);
 			progressBarEarly.fillAmount = (float)System.Math.Round(progressBarEarly.fillAmount - 0.01f, 2);
 			return;
 		}

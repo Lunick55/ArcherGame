@@ -11,10 +11,16 @@ public class CameraManager : MonoBehaviour {
 	private Vector3 camPosOrigin;
 	private Camera myCam;
 
+	private bool isShaking = false;
+
 	[SerializeField]
 	private float shakeTime = 0;
 	[SerializeField]
-	private float shakeAmount = 0;	
+	private float shakeAmount = 0;
+	[SerializeField]
+	private float lerpSpeed = 0;
+
+	private Vector3 dest;
 
 	public static CameraManager instance
 	{
@@ -39,27 +45,36 @@ public class CameraManager : MonoBehaviour {
 
 	public static void ShakeCamera()
 	{
-		Debug.Log("SHAKE");
-		instance.InvokeRepeating("StartShaking", 0, 0.1f);
-		instance.Invoke("StopShaking", instance.shakeTime);		
+		if (!instance.isShaking)
+		{
+			instance.isShaking = true;
+			instance.InvokeRepeating("StartShaking", 0, 0.05f);
+			instance.Invoke("StopShaking", instance.shakeTime);
+		}
 	}
 
 	private void StartShaking()
 	{
-		if (instance.myCam.transform.position != instance.camPosOrigin)
+		if (instance.myCam.transform.position == instance.camPosOrigin)
 		{
-			instance.myCam.transform.position = instance.camPosOrigin;
-		}
-		else
-		{
+			//if at origin, go somewhere else
 			Vector3 moveAmt = Random.insideUnitSphere * instance.shakeAmount;
-			instance.myCam.transform.position += moveAmt;
+			dest = instance.myCam.transform.position += moveAmt;
 		}
+		else if (instance.myCam.transform.position == dest)
+		{
+			//if we are at dest, work back to origin
+			dest = instance.camPosOrigin;
+		}
+
+		instance.myCam.transform.position = Vector3.Lerp(instance.myCam.transform.position, dest, lerpSpeed * Time.deltaTime);
+
 	}
 
 	private void StopShaking()
 	{
 		instance.CancelInvoke("StartShaking");
+		instance.isShaking = false;
 		instance.myCam.transform.position = instance.camPosOrigin;
 	}
 }

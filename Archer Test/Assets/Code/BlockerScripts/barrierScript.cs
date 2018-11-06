@@ -76,13 +76,11 @@ public class barrierScript : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
-		Debug.Log("IM IN");
 		canPlace = false;
 	}
 
 	private void OnTriggerExit2D(Collider2D col)
 	{
-		Debug.Log("IM OUT");
 		canPlace = true;
 	}
 }

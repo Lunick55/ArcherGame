@@ -33,7 +33,6 @@ public class targetSpawner : MonoBehaviour {
 		}
 		if (timeToSpawn >= maxSpawnRate && timeToMakeHarder > difficultyInterval)
 		{
-			Debug.Log("Spawn Rate:" + timeToSpawn);
 			timeToSpawn -= amountDecreased;
 			timeToMakeHarder = 0;
 		}

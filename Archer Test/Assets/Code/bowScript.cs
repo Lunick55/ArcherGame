@@ -25,27 +25,31 @@ public class bowScript : MonoBehaviour {
 	GameObject arrow;
 	GameObject finalArrow;
 
+	Animator anim;
+
 	string arrowType = "arrow";//get rid of this later--------------------------------------------<
 
 	// Use this for initialization
 	void Start ()
    {
 		prevTime = 0;
-		Application.targetFrameRate = 60;
+		Application.targetFrameRate = 30;
 
 		//arrow = Resources.Load("Arrow") as GameObject;
 		arrow = Resources.Load("Arrow") as GameObject;
 
 		finalArrow = Resources.Load("FinalArrow") as GameObject;
 
-		EventManager.AddListener("BlockerButtonClick", Rest);
-		EventManager.AddListener("ArrowDestroyed", Reload);
-		EventManager.AddListener("ExitButtonClick", Reload);
-		EventManager.AddListener("LoadPierceArrow", SetPierce);
+		//EventManager.AddListener("ArrowDestroyed", Reload);
+		//EventManager.AddListener("ExitButtonClick", Reload);
+		EventManager.AddListener("ObjectSelected", Unload);
 		EventManager.AddListener("ObjectPlaced", Reload);
+		EventManager.AddListener("LoadPierceArrow", SetPierce);
 		EventManager.AddListener("BaseHit", Recoil);
 
 		fullDrawTimeInFPS = fullDrawTimeInSec * Application.targetFrameRate;
+
+		anim = GetComponent<Animator>();
 
 		//ps = GetComponent<ParticleSystem>();
 		ps.Stop();
@@ -64,28 +68,30 @@ public class bowScript : MonoBehaviour {
 		}
 	}
 
-    void Rotate()
-    {
-        Vector3 distance = (mousePos - gameObject.transform.position);
+   void Rotate()
+   {
+       Vector3 distance = (mousePos - gameObject.transform.position);
 
-        angle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
+       angle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
 
-        transform.eulerAngles = new Vector3(0, 0, angle);
-    }
+       transform.eulerAngles = new Vector3(0, 0, angle);
+   }
 
 	void GetInput()
 	{
-		if (EventSystem.current.IsPointerOverGameObject() == true)
-		{
-			return;
-		}
+		////this is so mouse clicks won't be interpreted when on top of canvas objects
+		//if (EventSystem.current.IsPointerOverGameObject() == true)
+		//{
+		//	return;
+		//}
 
 		if (Input.GetMouseButtonDown(0))
 		{
 			//start timer
 			trueShotTimer = 0;
+			anim.SetBool("nocked", true);
 		}
-		if (Input.GetMouseButton(0))
+		else if (Input.GetMouseButton(0))
 		{
 			trueShotTimer += Time.deltaTime;
 
@@ -105,7 +111,7 @@ public class bowScript : MonoBehaviour {
 			GetComponent<lineRenderScript>().velocity = drawForce;
 			GetComponent<lineRenderScript>().angle = gameObject.transform.eulerAngles.z;
 		}
-		if (Input.GetMouseButtonUp(0))
+		else if (Input.GetMouseButtonUp(0))
 		{
 			if (trueShotTimer > 10)
 			{
@@ -114,17 +120,9 @@ public class bowScript : MonoBehaviour {
 			}
 			else
 			{
-				ps.Stop();
-				psCharging.Stop();
-				psFullCharge.Stop();
-				var em = psCharging.emission;
-				em.rateOverTime = 0;
 				FireArrow();
+				Rest();
 			}
-		}
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			Application.Quit();
 		}
 	}
 
@@ -134,18 +132,15 @@ public class bowScript : MonoBehaviour {
 		if (arrowType == "arrow")
 		{
 			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
-
 			newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-			//aiming = false;
-			drawForce = 0;
+			//drawForce = 0;
 		}
 		if (arrowType == "arrowPierce")
 		{
 			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
 
 			newArrow.GetComponent<arrowPierceScript>().SetDrawForce(drawForce);
-			aiming = false;
-			drawForce = 0;
+			//drawForce = 0;
 			arrowType = "arrow";
 			arrow = Resources.Load("Arrow") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
 		}
@@ -190,10 +185,22 @@ public class bowScript : MonoBehaviour {
 		aiming = true;
 	}
 
+	void Unload()
+	{
+		aiming = false;
+		Rest();
+	}
+
 	void Rest()
 	{
 		Debug.Log("REST");
-		aiming = false;
+		ps.Stop();
+		psCharging.Stop();
+		psFullCharge.Stop();
+		var em = psCharging.emission;
+		em.rateOverTime = 0;
+		drawForce = 0;
+		anim.SetBool("nocked", false);
 	}
 
 	void Recoil()

@@ -38,7 +38,7 @@ public class enemyScript : MonoBehaviour {
 		}
 		if (col.tag == "Sentry")
 		{
-			col.GetComponent<sentryScript>().SentryStrength--;
+			col.GetComponent<sentryScript>().DamageDone();
 			DestroyEnemy();
 		}
 		if (col.tag == "Base")
