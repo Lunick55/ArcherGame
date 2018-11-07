@@ -16,7 +16,7 @@ public class enemyScript : MonoBehaviour {
 		rb.velocity = new Vector2(-6, 0);
 
 		anim = GetComponent<Animator>();
-		anim.speed = 0.3f;
+		//anim.speed = 0.3f;
 	}
 
 	// Update is called once per frame
@@ -56,7 +56,7 @@ public class enemyScript : MonoBehaviour {
 		rb.bodyType = RigidbodyType2D.Static;
 		rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 		anim.SetBool("Dead", true);
-		anim.speed = 4;
+		//anim.speed = 4;
 		//Destroy(gameObject);
 	}
 
