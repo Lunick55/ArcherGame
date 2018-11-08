@@ -60,7 +60,7 @@ public class tentacleScript : MonoBehaviour
 		}
 		else if (col.tag == "Base")
 		{
-			col.GetComponent<BossAndBaseHealth>().health--;
+			col.GetComponent<BossAndBaseHealth>().DamageWallSlow(1);
 		}
 	}
 

@@ -38,17 +38,23 @@ public class currencyBarScript : MonoBehaviour {
 	{
 		CatchUp();
 		CatchDown();
-		FlashBar();
+		//FlashBar();
 
 	}
 
-	void FlashBar()
+	void FlashBar(float tempProg)
 	{
-		if (canFlash == true)
-		{
-			timer += 0.02f;
-			progressBarEarly.color = new Color32(255, 0, 0, (byte)Mathf.Abs((255 * Mathf.Cos(timer))));
-		}
+		//if (canFlash == true)
+		//{
+		timer += 0.02f;
+		progressBarEarly.fillAmount = tempProg;
+		progressBarEarly.color = new Color32(255, 0, 0, (byte)Mathf.Abs((255 * Mathf.Cos(timer))));
+		//}
+	}
+
+	void StopFlash()
+	{
+		
 	}
 
 	void SmallFill()

@@ -43,7 +43,7 @@ public class enemyScript : MonoBehaviour {
 		}
 		if (col.tag == "Base")
 		{
-			col.GetComponent<BossAndBaseHealth>().health -= 50;
+			col.GetComponent<BossAndBaseHealth>().DamageWall(1);
 			DestroyEnemy();
 			EventManager.FireEvent("BaseHit");
 			CameraManager.ShakeCamera();
