@@ -4,36 +4,45 @@ using UnityEngine;
 
 public class tentacleScript : MonoBehaviour
 {
+    GameObject[] segments;
 
 	Rigidbody2D rb;
-	Renderer rend;
+
+    [SerializeField] private float tentacleSpeed = 0;
 
 	// Use this for initialization
 	void Start()
 	{
-		rend = GetComponent<Renderer>();
+        segments = new GameObject[transform.childCount];
+        for (int i = 0; i < segments.Length; i++)
+        {
+            segments[i] = transform.GetChild(i).gameObject;
+            segments[i].GetComponent<tentacleSegment>().Invoke("StartMoving", (float)(i/2.0f));
+        }
+
 		rb = GetComponent<Rigidbody2D>();
-		rb.velocity = new Vector2(-2, 0);
+		rb.velocity = new Vector2(tentacleSpeed, 0);
 
 		//clean this up. maybe set it in the spawner script
-		transform.position = new Vector2(transform.position.x + 9, transform.position.y);
-		transform.eulerAngles = new Vector3(0, 0, 90);
+		transform.position = new Vector2(transform.position.x + 2, transform.position.y);
+		//transform.eulerAngles = new Vector3(0, 0, 90);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (rend.isVisible == false)
-		{
-			DestroyEnemy();
-		}
+        if (transform.childCount == 0)
+        {
+            Destroy(gameObject);
+        }
 	}
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.tag == "Arrow")
 		{
-			EventManager.FireEvent("SmallFill");
+            rb.velocity = new Vector2(0, 0);
+            EventManager.FireEvent("SmallFill");
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
@@ -54,13 +63,13 @@ public class tentacleScript : MonoBehaviour
 		if (col.tag == "Barrier")
 		{
 			col.GetComponent<barrierScript>().BarrierStrength--;
-
-			//rb.velocity = new Vector2(0, 0);
+			rb.velocity = new Vector2(0, 0);
 			//DestroyEnemy();
 		}
 		else if (col.tag == "Base")
 		{
-			col.GetComponent<BossAndBaseHealth>().DamageWallSlow(1);
+            Debug.Log("BASE VAMPIRE");
+            col.GetComponent<BossAndBaseHealth>().DamageWallSlow(1);
 		}
 	}
 
@@ -68,14 +77,22 @@ public class tentacleScript : MonoBehaviour
 	{
 		if (col.tag == "Barrier")
 		{
-			rb.velocity = new Vector2(-2, 0);
+			rb.velocity = new Vector2(tentacleSpeed, 0);
 			//DestroyEnemy();
 		}
 	}
 
 	void DestroyEnemy()
 	{
-		//Don't destroy. Weaken until dead. Multiple hits to kill
-		Destroy(gameObject);
+        //Don't destroy. Weaken until dead. Multiple hits to kill
+        GetComponent<Collider2D>().enabled = false;
+
+        for (int i = 0; i < segments.Length; i++)
+        {
+            segments[i].GetComponent<tentacleSegment>().Invoke("StopWiggling", 0.0f);
+            segments[i].GetComponent<tentacleSegment>().Invoke("Die", (float)(i / 4.0f));
+        }
+
+        //Destroy(gameObject);
 	}
 }

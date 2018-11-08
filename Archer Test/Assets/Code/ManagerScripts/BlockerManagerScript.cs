@@ -57,7 +57,6 @@ public class BlockerManagerScript : MonoBehaviour {
 			case 3:
 				if (myBlockerBar.HighCost() == true)
 				{
-					Debug.Log("PIERCE ARROW");
 					EventManager.FireEvent("LoadPierceArrow");
 					return true;
 				}

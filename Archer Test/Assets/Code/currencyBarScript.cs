@@ -5,7 +5,12 @@ using UnityEngine.UI;
 
 public class currencyBarScript : MonoBehaviour {
 
-	public Image progressBar;
+    [SerializeField] private float sentryCost;
+    [SerializeField] private float barrierCost;
+    [SerializeField] private float pierceCost;
+
+
+    public Image progressBar;
 	public Image progressBarEarly;
 	//public Image progressBarCost;
 	private float personalTimer;
@@ -57,6 +62,7 @@ public class currencyBarScript : MonoBehaviour {
 		
 	}
 
+    //TODO: Turn these into a single function
 	void SmallFill()
 	{
 		if(progressBarEarly.fillAmount < 1.0)
@@ -66,7 +72,6 @@ public class currencyBarScript : MonoBehaviour {
 		progressBarEarly.color = new Color32(0, 255, 0, 255);
 		progressBarEarly.fillAmount = progress += 0.1f;
 	}
-
 	void MedFill()
 	{
 		if (progressBarEarly.fillAmount < 1.0)
@@ -77,7 +82,6 @@ public class currencyBarScript : MonoBehaviour {
 		progressBarEarly.fillAmount = progress += 0.2f;
 
 	}
-
 	void BigFill()
 	{
 		if (progressBarEarly.fillAmount < 1.0)
@@ -91,12 +95,12 @@ public class currencyBarScript : MonoBehaviour {
 	//TODO: turn these into a single function that take a float Cost
 	public bool SmallCost()
 	{
-		if (fToI(progress) >= fToI(0.3f))
+		if (fToI(progress) >= fToI(barrierCost))
 		{
 			//FullCatchUp();
 			canCatchDown = true;
 			canCatchUp = false;
-			progressBar.fillAmount = progress -= 0.3f;
+			progressBar.fillAmount = progress -= barrierCost;
 			return true;
 		}
 
@@ -104,12 +108,12 @@ public class currencyBarScript : MonoBehaviour {
 	}
 	public bool MedCost()
 	{
-		if (fToI(progress) >= fToI(0.5f))
+		if (fToI(progress) >= fToI(sentryCost))
 		{
 			FullCatchUp();
 			canCatchDown = true;
 			canCatchUp = false;
-			progressBar.fillAmount = progress -= 0.5f;
+			progressBar.fillAmount = progress -= sentryCost;
 			return true;
 		}
 
@@ -117,11 +121,11 @@ public class currencyBarScript : MonoBehaviour {
 	}
 	public bool HighCost()
 	{
-		if (fToI(progress) >= fToI(0.8f))
+		if (fToI(progress) >= fToI(pierceCost))
 		{
 			FullCatchUp();
 			canCatchDown = true;
-			progressBar.fillAmount = progress -= 0.8f;
+			progressBar.fillAmount = progress -= pierceCost;
 			return true;
 		}
 

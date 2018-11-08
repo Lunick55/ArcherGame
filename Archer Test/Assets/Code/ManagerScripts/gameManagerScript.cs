@@ -59,8 +59,12 @@ public class gameManagerScript : MonoBehaviour {
 		{
 			ExitBlockerPlaceState(1);//sentry
 		}
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ExitBlockerPlaceState(3);//pierce
+        }
 
-		if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			Application.Quit();
 		}
@@ -70,9 +74,16 @@ public class gameManagerScript : MonoBehaviour {
 	{
 		if (instance.myBlockerManager.SpawnBlocker(blockType) == true)
 		{
-			instance.Pause();
-			EventManager.FireEvent("ObjectSelected");
+            if (blockType != 3)
+            {
+                instance.Pause();
+                EventManager.FireEvent("ObjectSelected");
+            }
 		}
+        else
+        {
+            Debug.Log("NOT ENOUGH");
+        }
 	}
 
 	private static void ExitPierceBlockerMenuResume()
@@ -115,7 +126,6 @@ public class gameManagerScript : MonoBehaviour {
 	void Resume()
 	{
 		Time.timeScale = 1.0f;
-		//enable the blocker button
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
 	}
 

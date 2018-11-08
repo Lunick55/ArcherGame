@@ -15,7 +15,7 @@ public class bowScript : MonoBehaviour {
 	private float angle;
 	private float trueShotTimer = 0;
 
-	bool aiming = true;
+	public bool aiming = true;
 
 	Vector3 mousePos;
 
@@ -89,11 +89,13 @@ public class bowScript : MonoBehaviour {
 		{
 			//start timer
 			trueShotTimer = 0;
-			anim.SetBool("nocked", true);
-		}
-		else if (Input.GetMouseButton(0))
+
+        }
+        else if (Input.GetMouseButton(0))
 		{
-			trueShotTimer += Time.deltaTime;
+            anim.SetBool("nocked", true);
+
+            trueShotTimer += Time.deltaTime;
 
 			if (drawForce < maxVelocity)
 			{
@@ -193,7 +195,6 @@ public class bowScript : MonoBehaviour {
 
 	void Rest()
 	{
-		Debug.Log("REST");
 		ps.Stop();
 		psCharging.Stop();
 		psFullCharge.Stop();
@@ -205,18 +206,22 @@ public class bowScript : MonoBehaviour {
 
 	void Recoil()
 	{
-		Debug.Log("Recoil");
 		drawForce = 0;
 		trueShotTimer = 0;
-		var em = psCharging.emission;
+        ps.Stop();
+        psCharging.Stop();
+        psFullCharge.Stop();
+        var em = psCharging.emission;
 		em.rateOverTime = 0;
-	}
+        //anim.SetBool("nocked", false);
+        anim.Rebind();
+    }
 
-	void SetPierce()
+
+    void SetPierce()
 	{
 		arrowType = "arrowPierce";
 		arrow = Resources.Load("arrowPierce") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
 		Reload();
-		Debug.Log("PIERCE LOADED CAPTAIN");
 	}
 }

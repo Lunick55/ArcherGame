@@ -10,19 +10,28 @@ public class BossAndBaseHealth : MonoBehaviour {
 	[SerializeField] private int damageThresh = 0;
 	private int orgDamageThresh;
 
+    public GameObject[] healthOrbs;
+    private int orbIndex;
+
 	// Use this for initialization
 	void Start () 
 	{
 		orgDamageThresh = damageThresh;		
 
 		health = transform.childCount;
-		Debug.Log(health);
-		for (int i = 0; i < health-1; i++)
+        orbIndex = health - 1;
+
+
+        healthOrbs = new GameObject[health];
+
+		for (int i = 0; i < health; i++)
 		{
 			float randNum = (int)Random.Range(1, 3);
 			randNum *= 0.3333f;
 
-			transform.GetChild(i).GetComponent<Animator>().SetFloat("offset",randNum);
+            healthOrbs[i] = transform.GetChild(i).gameObject;
+
+			healthOrbs[i].GetComponent<Animator>().SetFloat("offset",randNum);
 		}
 
 	}
@@ -40,19 +49,22 @@ public class BossAndBaseHealth : MonoBehaviour {
 	{
 		if (health-dmg < 0)
 		{
-			if (health != 0)
+			if (health != 0 && orbIndex > -1)
 			{
 				health = 0;
 				//kill kid
-				Destroy(transform.GetChild(0).gameObject);
+				Destroy(healthOrbs[orbIndex].gameObject);
+                orbIndex--;
 				return;
 			}
 			return;
 		}
 
 		health -= dmg;
-		//kill kid
-		Destroy(transform.GetChild(0).gameObject);
+        //kill kid
+        healthOrbs[orbIndex].GetComponent<Animator>().SetBool("dead", true);
+		Destroy(healthOrbs[orbIndex].gameObject, 0.5f);
+        orbIndex--;
 	}
 
 	public void DamageWallSlow(int dmg)
