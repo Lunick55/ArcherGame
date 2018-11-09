@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3aeace274921b74ba8eb0b15c70ee6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tentacleSpeed: -1.8
+  tentacleSpeed: -2
 --- !u!114 &114554599019133040
 MonoBehaviour:
   m_ObjectHideFlags: 1

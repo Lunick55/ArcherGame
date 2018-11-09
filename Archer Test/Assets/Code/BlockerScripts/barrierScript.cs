@@ -47,7 +47,7 @@ public class barrierScript : MonoBehaviour {
 
 		damage = (255 * (BarrierStrength * 100 / 200) / 100);
 
-		rend.color = new Color32(255, (byte)damage, (byte)damage, 255);
+		rend.color = new Color32((byte)damage, (byte)damage, (byte)damage, 255);
 	}
 
 	void GetInput()

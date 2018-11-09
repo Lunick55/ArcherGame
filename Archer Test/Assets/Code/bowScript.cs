@@ -27,6 +27,8 @@ public class bowScript : MonoBehaviour {
 
 	Animator anim;
 
+    bool endGame = false;
+
 	string arrowType = "arrow";//get rid of this later--------------------------------------------<
 
 	// Use this for initialization
@@ -61,11 +63,15 @@ public class bowScript : MonoBehaviour {
 	void Update ()
     {
        mousePos = Camera.main.ScreenToWorldPoint( Input.mousePosition);
-		if (aiming == true)
+		if (aiming == true && endGame == false)
 		{
 			Rotate();
 			GetInput();
 		}
+         if (endGame)
+        {
+            EventManager.FireEvent("GAMEOVER");
+        }
 	}
 
    void Rotate()
@@ -151,11 +157,12 @@ public class bowScript : MonoBehaviour {
 	void FireFinalArrow()
 	{
 		GameObject newFinalArrow = Instantiate(finalArrow, transform.position, transform.rotation, null) as GameObject;
-
 		newFinalArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-		//aiming = false;
+		aiming = false;
 		drawForce = 0;
-		EventManager.FireEvent("LoadWin");
+        //EventManager.FireEvent("LoadWin");
+        endGame = true;
+        gameManagerScript.GoToEnd();
 	}
 
 	void ChargeFinalArrow()

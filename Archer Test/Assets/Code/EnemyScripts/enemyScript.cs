@@ -16,7 +16,9 @@ public class enemyScript : MonoBehaviour {
 		rb.velocity = new Vector2(-6, 0);
 
 		anim = GetComponent<Animator>();
-		//anim.speed = 0.3f;
+        //anim.speed = 0.3f;
+
+        EventManager.AddListener("GAMEOVER", RemoveEnemy);
 	}
 
 	// Update is called once per frame

@@ -26,11 +26,6 @@ public class targetSpawner : MonoBehaviour {
 		timer += Time.deltaTime;
 		timeToMakeHarder += Time.deltaTime;
 
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			GameObject newEnemy = Instantiate(tentacle) as GameObject;
-			newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
-		}
 		if (timeToSpawn >= maxSpawnRate && timeToMakeHarder > difficultyInterval)
 		{
 			timeToSpawn -= amountDecreased;
@@ -51,7 +46,7 @@ public class targetSpawner : MonoBehaviour {
 	void SpawnEnemy(GameObject enemy)
 	{
 		GameObject newEnemy = Instantiate(enemy) as GameObject;
-		newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 5), 0), Quaternion.identity);
+		newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 3), 0), Quaternion.identity);
 		timer = 0;
 	}
 

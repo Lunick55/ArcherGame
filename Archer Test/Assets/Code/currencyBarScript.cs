@@ -45,7 +45,33 @@ public class currencyBarScript : MonoBehaviour {
 		CatchDown();
 		//FlashBar();
 
-	}
+        if (progress >= sentryCost)
+        {
+            gameManagerScript.ActivateUIElement(1);
+        }
+        else
+        {
+            gameManagerScript.DeactivateUIElement(1);
+        }
+
+        if (progress >= barrierCost)
+        {
+            gameManagerScript.ActivateUIElement(0);
+        }
+        else
+        {
+            gameManagerScript.DeactivateUIElement(0);
+        }
+
+        if (progress >= pierceCost)
+        {
+            gameManagerScript.ActivateUIElement(2);
+        }
+        else
+        {
+            gameManagerScript.DeactivateUIElement(2);
+        }
+    }
 
 	void FlashBar(float tempProg)
 	{

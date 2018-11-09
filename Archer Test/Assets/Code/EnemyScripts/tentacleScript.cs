@@ -25,11 +25,13 @@ public class tentacleScript : MonoBehaviour
 
 		//clean this up. maybe set it in the spawner script
 		transform.position = new Vector2(transform.position.x + 2, transform.position.y);
-		//transform.eulerAngles = new Vector3(0, 0, 90);
-	}
+        //transform.eulerAngles = new Vector3(0, 0, 90);
 
-	// Update is called once per frame
-	void Update()
+        EventManager.AddListener("GAMEOVER", RemoveEnemy);
+    }
+
+    // Update is called once per frame
+    void Update()
 	{
         if (transform.childCount == 0)
         {
@@ -95,4 +97,9 @@ public class tentacleScript : MonoBehaviour
 
         //Destroy(gameObject);
 	}
+
+    public void RemoveEnemy()
+    {
+        Destroy(gameObject);
+    }
 }
