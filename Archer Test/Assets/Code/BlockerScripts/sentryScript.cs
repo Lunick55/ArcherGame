@@ -62,6 +62,12 @@ public class sentryScript : MonoBehaviour {
 			activated = true;
 			EventManager.FireEvent("ObjectPlaced");
 		}
+
+		if (Input.GetMouseButtonUp(1) && !activated)
+		{
+			SentryStrength = 0;
+			EventManager.FireEvent("ObjectPlaced");
+		}
 	}
 
 	void SentryMode()

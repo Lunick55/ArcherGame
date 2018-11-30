@@ -7,11 +7,12 @@ public class targetSpawner : MonoBehaviour {
 	GameObject target;
 	GameObject tentacle;
 	float timer = 0;
-	public float timeToSpawn;
-	float timeToMakeHarder;//decrease health by x every interval
-	public float difficultyInterval;
-	public float maxSpawnRate;
-	public float amountDecreased;
+
+	[SerializeField] private float waveDuration;
+	[SerializeField] private int progressThroughWave = 0;
+	private float oldTime = 0;
+
+	[SerializeField] AnimationCurve difficultyCurve;
 
 	// Use this for initialization
 	void Start () 
@@ -24,34 +25,51 @@ public class targetSpawner : MonoBehaviour {
 	void Update () 
 	{
 		timer += Time.deltaTime;
-		timeToMakeHarder += Time.deltaTime;
 
-		if (timeToSpawn >= maxSpawnRate && timeToMakeHarder > difficultyInterval)
+		if (oldTime > (Time.time % waveDuration))
 		{
-			timeToSpawn -= amountDecreased;
-			timeToMakeHarder = 0;
+			progressThroughWave++;
 		}
-		if (timer > timeToSpawn)
+
+		if (timer > difficultyCurve.Evaluate(progressThroughWave)*100)
 		{
 			int num;
 			num = Random.Range(0, 2);
+			timer = 0;
 
-			if (num == 0)
-				SpawnEnemy(target);
-			if (num == 1)
+			if (progressThroughWave % 10 == 0)
 				SpawnEnemy(tentacle);
+
+			//if (num == 2)
+				SpawnEnemyInteresting(target);
+			//if (num == 2)
+				//SpawnEnemy(tentacle);
 		}
+
+		oldTime = (Time.time % waveDuration);
 	}
 
 	void SpawnEnemy(GameObject enemy)
 	{
 		GameObject newEnemy = Instantiate(enemy) as GameObject;
 		newEnemy.transform.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 3), 0), Quaternion.identity);
-		timer = 0;
 	}
 
-	void IncreaseSpawnRate()
+	void SpawnEnemyInteresting(GameObject enemy)
 	{
+		float size;
+		float speed;
+		int colorG;
+		size = Random.Range(1.0f, 3.0f);
+		speed = Random.Range(-5.0f, -8.0f);
+		colorG = Random.Range(0, 255);
 
+		GameObject newEnemy = Instantiate(enemy) as GameObject;
+		Transform enemyTrans = newEnemy.transform;
+
+		enemyTrans.SetPositionAndRotation(new Vector3(transform.position.x, Random.Range(-3, 3), 0), Quaternion.identity);
+		enemyTrans.localScale = new Vector3(size, size, 0);
+		enemyTrans.GetComponent<enemyScript>().ChangeSpeed(speed);
+		enemyTrans.GetComponent<SpriteRenderer>().color = new Color32(255, (byte)colorG, 255, 255);
 	}
 }

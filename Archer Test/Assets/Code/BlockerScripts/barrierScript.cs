@@ -62,6 +62,12 @@ public class barrierScript : MonoBehaviour {
 			activated = true;
 			EventManager.FireEvent("ObjectPlaced");
 		}
+
+		if (Input.GetMouseButtonUp(1) && !activated)
+		{
+			BarrierStrength = 0;
+			EventManager.FireEvent("ObjectPlaced");
+		}
 	}
 
 	void BarrierMode()

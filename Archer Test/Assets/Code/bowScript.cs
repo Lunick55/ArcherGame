@@ -3,25 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class bowScript : MonoBehaviour {
-
-	int currTime, prevTime;
-
+public class bowScript : MonoBehaviour 
+{
 	public float maxVelocity;
 	public float fullDrawTimeInSec;
 
 	float fullDrawTimeInFPS;
 	float drawForce;
 	private float angle;
-	private float trueShotTimer = 0;
 
 	public bool aiming = true;
 
 	Vector3 mousePos;
 
 	public ParticleSystem ps;
-	public ParticleSystem psCharging;
-	public ParticleSystem psFullCharge;
 	GameObject arrow;
 	GameObject finalArrow;
 
@@ -34,29 +29,21 @@ public class bowScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
    {
-		prevTime = 0;
 		Application.targetFrameRate = 30;
 
-		//arrow = Resources.Load("Arrow") as GameObject;
 		arrow = Resources.Load("Arrow") as GameObject;
 
 		finalArrow = Resources.Load("FinalArrow") as GameObject;
 
-		//EventManager.AddListener("ArrowDestroyed", Reload);
-		//EventManager.AddListener("ExitButtonClick", Reload);
 		EventManager.AddListener("ObjectSelected", Unload);
 		EventManager.AddListener("ObjectPlaced", Reload);
 		EventManager.AddListener("LoadPierceArrow", SetPierce);
-		EventManager.AddListener("BaseHit", Recoil);
 
 		fullDrawTimeInFPS = fullDrawTimeInSec * Application.targetFrameRate;
 
 		anim = GetComponent<Animator>();
 
-		//ps = GetComponent<ParticleSystem>();
 		ps.Stop();
-		psCharging.Stop();
-		psFullCharge.Stop();
 	}
 
 	// Update is called once per frame
@@ -68,10 +55,10 @@ public class bowScript : MonoBehaviour {
 			Rotate();
 			GetInput();
 		}
-         if (endGame)
-        {
-            EventManager.FireEvent("GAMEOVER");
-        }
+      if (endGame)
+      {
+         EventManager.FireEvent("GAMEOVER");
+      }
 	}
 
    void Rotate()
@@ -93,15 +80,11 @@ public class bowScript : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown(0))
 		{
-			//start timer
-			trueShotTimer = 0;
 
-        }
-        else if (Input.GetMouseButton(0))
+      }
+      else if (Input.GetMouseButton(0))
 		{
             anim.SetBool("nocked", true);
-
-            trueShotTimer += Time.deltaTime;
 
 			if (drawForce < maxVelocity)
 			{
@@ -113,7 +96,6 @@ public class bowScript : MonoBehaviour {
 			else
 			{
 				ps.Stop();
-				ChargeFinalArrow();
 			}
 
 			GetComponent<lineRenderScript>().velocity = drawForce;
@@ -121,16 +103,9 @@ public class bowScript : MonoBehaviour {
 		}
 		else if (Input.GetMouseButtonUp(0))
 		{
-			if (trueShotTimer > 10)
-			{
-				Debug.Log("TRUE ARROW AWWWAAAYYY");
-				FireFinalArrow();
-			}
-			else
-			{
-				FireArrow();
-				Rest();
-			}
+			FireArrow();
+			Rest();
+		
 		}
 	}
 
@@ -160,32 +135,9 @@ public class bowScript : MonoBehaviour {
 		newFinalArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
 		aiming = false;
 		drawForce = 0;
-        //EventManager.FireEvent("LoadWin");
-        endGame = true;
-        gameManagerScript.GoToEnd();
-	}
-
-	void ChargeFinalArrow()
-	{
-		currTime = Mathf.FloorToInt(trueShotTimer);
-
-		if (currTime > prevTime && trueShotTimer < 10)
-		{
-			var em = psCharging.emission;
-			em.rateOverTime = em.rateOverTime.constant  + 5;
-
-			if (psCharging.isPlaying == false)
-				psCharging.Play();
-		}
-		else if (trueShotTimer > 10)
-		{
-			psCharging.Stop();
-
-			if (psFullCharge.isPlaying == false)
-				psFullCharge.Play();
-		}
-
-		prevTime = currTime;
+      //EventManager.FireEvent("LoadWin");
+      endGame = true;
+      WorldManager.GoToEnd();
 	}
 
 	void Reload()
@@ -196,36 +148,20 @@ public class bowScript : MonoBehaviour {
 
 	void Unload()
 	{
+		Debug.Log("UNLOAD");
 		aiming = false;
 		Rest();
 	}
 
+	//Used during pause screens to fully reset the bow, as well as after firing
 	void Rest()
 	{
 		ps.Stop();
-		psCharging.Stop();
-		psFullCharge.Stop();
-		var em = psCharging.emission;
-		em.rateOverTime = 0;
 		drawForce = 0;
 		anim.SetBool("nocked", false);
 	}
 
-	void Recoil()
-	{
-		drawForce = 0;
-		trueShotTimer = 0;
-        ps.Stop();
-        psCharging.Stop();
-        psFullCharge.Stop();
-        var em = psCharging.emission;
-		em.rateOverTime = 0;
-        //anim.SetBool("nocked", false);
-        anim.Rebind();
-    }
-
-
-    void SetPierce()
+   void SetPierce()
 	{
 		arrowType = "arrowPierce";
 		arrow = Resources.Load("arrowPierce") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array

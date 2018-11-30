@@ -4,27 +4,33 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class gameManagerScript : MonoBehaviour {
+public class WorldManager : MonoBehaviour {
 
 	public GameObject BlockerManager;
 	BlockerManagerScript myBlockerManager;
 
-	private static gameManagerScript gameManager;
+	private int arrowBits = 0; //number to win game
 
-    public Image[] elementUIImages;
+	private static WorldManager worldManager;
 
-	public static gameManagerScript instance
+   [SerializeField] Image[] elementUIImages;
+	[SerializeField] GameObject[] elementUIPulses;
+
+	[SerializeField] Color32 normalColor;
+	[SerializeField] Color32[] abilityColors;
+
+	public static WorldManager instance
 	{
 		get
 		{
-			if (!gameManager)
+			if (!worldManager)
 			{
-				gameManager = FindObjectOfType(typeof(gameManagerScript)) as gameManagerScript;
+				worldManager = FindObjectOfType(typeof(WorldManager)) as WorldManager;
 
-				gameManager.Init();
+				worldManager.Init();
 			}
 
-			return gameManager;
+			return worldManager;
 		}
 	}
 
@@ -57,27 +63,33 @@ public class gameManagerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-        if (BlockerManager != null)
-        {
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                ExitBlockerPlaceState(3);//pierce
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                ExitBlockerPlaceState(2);//barrier
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                ExitBlockerPlaceState(1);//sentry
-            }
-
+		if (BlockerManager != null)
+		{
+			if (Time.timeScale != 0.1f)
+			{
+				if (Input.GetKeyDown(KeyCode.Alpha1))
+				{
+					ExitBlockerPlaceState(3);//pierce
+				}
+				if (Input.GetKeyDown(KeyCode.Alpha3))
+				{
+					ExitBlockerPlaceState(2);//barrier
+				}
+				if (Input.GetKeyDown(KeyCode.Alpha2))
+				{
+					ExitBlockerPlaceState(1);//sentry
+				}
+			}
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 LoadMenu();
             }
-        }
+		}
+
+		if (instance.arrowBits > 5)
+		{
+			Debug.Log("ARROW WIN MAYBE");
+		}
 	}
 
 	private static void ExitBlockerPlaceState(int blockType)
@@ -90,18 +102,10 @@ public class gameManagerScript : MonoBehaviour {
                 EventManager.FireEvent("ObjectSelected");
             }
 		}
-        else
-        {
-            Debug.Log("NOT ENOUGH");
-        }
-	}
-
-	private static void ExitPierceBlockerMenuResume()
-	{
-		if (instance.myBlockerManager.SpawnBlocker(3) == true)
-		{
-			instance.Resume();
-		}
+      else
+      {
+			Debug.Log("NOT ENOUGH");
+      }
 	}
 
 	void StartGame()
@@ -163,12 +167,21 @@ public class gameManagerScript : MonoBehaviour {
         LoadWin();
     }
 
-    public static void ActivateUIElement(int i)
-    {
-        instance.elementUIImages[i].color = new Color32(100, 100, 255, 255);
-    }
-    public static void DeactivateUIElement(int i)
-    {
-        instance.elementUIImages[i].color = new Color32(255, 255, 255, 125);
-    }
+	public static void ActivateUIElement(int i)
+	{
+		instance.elementUIImages[i].color = instance.abilityColors[i];
+		instance.elementUIPulses[i].SetActive(true);
+   }
+   public static void DeactivateUIElement(int i)
+   {
+		Color32 tmpColor = new Color32(instance.abilityColors[i].r, instance.abilityColors[i].g, instance.abilityColors[i].b, 50);
+
+		instance.elementUIImages[i].color = tmpColor;
+		instance.elementUIPulses[i].SetActive(false);
+	}
+
+	public static void arrowBitFound()
+	{
+		instance.arrowBits++;
+	}
 }

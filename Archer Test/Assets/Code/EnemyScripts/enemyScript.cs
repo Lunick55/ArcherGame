@@ -7,13 +7,14 @@ public class enemyScript : MonoBehaviour {
 	Rigidbody2D rb;
 	Renderer rend;
 	Animator anim;
+	float speed = -6.0f;
 
 	// Use this for initialization
 	void Start () 
 	{
 		rend = GetComponent<Renderer>();
 		rb = GetComponent<Rigidbody2D>();
-		rb.velocity = new Vector2(-6, 0);
+		rb.velocity = new Vector2(speed, 0);
 
 		anim = GetComponent<Animator>();
         //anim.speed = 0.3f;
@@ -47,7 +48,6 @@ public class enemyScript : MonoBehaviour {
 		{
 			col.GetComponent<BossAndBaseHealth>().DamageWall(1);
 			DestroyEnemy();
-			EventManager.FireEvent("BaseHit");
 			CameraManager.ShakeCamera();
 		}
 	}
@@ -60,6 +60,11 @@ public class enemyScript : MonoBehaviour {
 		anim.SetBool("Dead", true);
 		//anim.speed = 4;
 		//Destroy(gameObject);
+	}
+
+	public void ChangeSpeed(float newSpeed)
+	{
+		speed = newSpeed;
 	}
 
 	public void RemoveEnemy()

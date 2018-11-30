@@ -45,7 +45,6 @@ public class tentacleSegment : MonoBehaviour {
 
     public void StartMoving()
     {
-        Debug.Log("GO");
         canTime = true;
     }
 

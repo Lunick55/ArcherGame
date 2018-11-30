@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class tentacleScript : MonoBehaviour
 {
-    GameObject[] segments;
+   GameObject[] segments;
 
 	Rigidbody2D rb;
 
-    [SerializeField] private float tentacleSpeed = 0;
+   [SerializeField] private float tentacleSpeed = 0;
+
+	private bool vulnerable = false;
 
 	// Use this for initialization
 	void Start()
@@ -35,7 +37,7 @@ public class tentacleScript : MonoBehaviour
 	{
         if (transform.childCount == 0)
         {
-            Destroy(gameObject);
+			Destroy(gameObject);
         }
 	}
 
@@ -43,8 +45,13 @@ public class tentacleScript : MonoBehaviour
 	{
 		if (col.tag == "Arrow")
 		{
-            rb.velocity = new Vector2(0, 0);
-            EventManager.FireEvent("SmallFill");
+			if (vulnerable)
+			{
+				WorldManager.arrowBitFound();
+			}
+
+			rb.velocity = new Vector2(0, 0);
+			EventManager.FireEvent("SmallFill");
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
@@ -55,7 +62,6 @@ public class tentacleScript : MonoBehaviour
 		if (col.tag == "Base")
 		{
 			rb.velocity = new Vector2(0, 0);
-			EventManager.FireEvent("BaseHit");
 			CameraManager.ShakeCamera();
 		}
 	}
@@ -64,14 +70,18 @@ public class tentacleScript : MonoBehaviour
 	{
 		if (col.tag == "Barrier")
 		{
+			vulnerable = true;
+			segments[0].GetComponent<Animator>().SetBool("vulnerable", true);
 			col.GetComponent<barrierScript>().BarrierStrength--;
 			rb.velocity = new Vector2(0, 0);
+			segments[0].GetComponent<SpriteRenderer>().color = new Color(255, 0, 0, 255);
 			//DestroyEnemy();
 		}
 		else if (col.tag == "Base")
 		{
             Debug.Log("BASE VAMPIRE");
             col.GetComponent<BossAndBaseHealth>().DamageWallSlow(1);
+				//TODO: make head vulnerable
 		}
 	}
 
@@ -79,7 +89,10 @@ public class tentacleScript : MonoBehaviour
 	{
 		if (col.tag == "Barrier")
 		{
+			vulnerable = false;
+			segments[0].GetComponent<Animator>().SetBool("vulnerable", false);
 			rb.velocity = new Vector2(tentacleSpeed, 0);
+			segments[0].GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
 			//DestroyEnemy();
 		}
 	}
