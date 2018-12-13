@@ -20,7 +20,7 @@ public class barrierScript : MonoBehaviour {
 	{
 		rend = GetComponent<SpriteRenderer>();
 
-		//EventManager.AddListener("WeakenSentry", WeakenSentry);
+		EventManager.AddListener("DeadMansHand", DestroySelf);
 	}
 
 	// Update is called once per frame
@@ -42,7 +42,7 @@ public class barrierScript : MonoBehaviour {
 
 		if (BarrierStrength <= 0)
 		{
-			Destroy(gameObject);
+			DestroySelf();
 		}
 
 		damage = (255 * (BarrierStrength * 100 / 200) / 100);
@@ -88,5 +88,10 @@ public class barrierScript : MonoBehaviour {
 	private void OnTriggerExit2D(Collider2D col)
 	{
 		canPlace = true;
+	}
+
+	void DestroySelf()
+	{
+		Destroy(gameObject);
 	}
 }

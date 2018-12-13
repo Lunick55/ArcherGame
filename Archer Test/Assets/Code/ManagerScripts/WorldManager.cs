@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class WorldManager : MonoBehaviour 
 {
 	[SerializeField] GameObject notEnoughObject;
+	[SerializeField] Animator transitionAnim;
+
 	SpriteRenderer notEnoughColor;
 	float notEnoughTimer = 0;
 
@@ -69,7 +71,7 @@ public class WorldManager : MonoBehaviour
 		EventManager.AddListener("LoadWin", LoadWin);
 		EventManager.AddListener("LoadLose", LoadLose);
       EventManager.AddListener("LoadTutorial", LoadTutorial);
-      EventManager.AddListener("LoadTutorial2", LoadTutorial2);
+      //EventManager.AddListener("LoadTutorial2", LoadTutorial2);
 
       EventManager.AddListener("ObjectPlaced", Resume);
 	}
@@ -80,6 +82,10 @@ public class WorldManager : MonoBehaviour
 		if (SceneManager.GetActiveScene().name == "TutorialScene")
 		{
 			isTut = true;
+		}
+		else
+		{
+			isTut = false;
 		}
 
 		if (BlockerManager != null)
@@ -170,7 +176,8 @@ public class WorldManager : MonoBehaviour
 	{
 		Debug.Log("START GAME");
         Resume();
-        SceneManager.LoadScene("MainGameScene");
+		//SceneManager.LoadScene("MainGameScene");
+		StartCoroutine(LoadScene("MainGameScene"));
 	}
 
 	void QuitGame()
@@ -181,28 +188,28 @@ public class WorldManager : MonoBehaviour
 	void LoadMenu()
 	{
         Resume();
-        SceneManager.LoadScene("MenuScene");
+		StartCoroutine(LoadScene("MenuScene"));
 	}
 	void LoadWin()
 	{
-        Resume();
-		SceneManager.LoadScene("WinScene");
+      Resume();
+		StartCoroutine(LoadScene("WinScene"));
 	}
 	void LoadLose()
 	{
         Resume();
-        SceneManager.LoadScene("LoseScene");
+		StartCoroutine(LoadScene("LoseScene"));
 	}
     void LoadTutorial()
     {
         Resume();
-        SceneManager.LoadScene("TutorialScene");
+		StartCoroutine(LoadScene("TutorialScene"));
     }
-    void LoadTutorial2()
-    {
-        Resume();
-        SceneManager.LoadScene("TutorialScene2");
-    }
+    //void LoadTutorial2()
+    //{
+    //    Resume();
+    //    SceneManager.LoadScene("TutorialScene2");
+    //}
 
     void Pause()
 	{
@@ -243,13 +250,21 @@ public class WorldManager : MonoBehaviour
 	{
 		if (SceneManager.GetActiveScene().name == "TutorialScene" && tutEndSoon)
 		{
+			EventManager.FireEvent("DeadMansHand");
 			instance.arrowBits++;
 			instance.finalArrow.GetComponent<SpriteRenderer>().sprite = instance.finalArrowProgress[0];
 		}
 		else 
 		{
+			EventManager.FireEvent("DeadMansHand");
 			instance.arrowBits++;
 			instance.finalArrow.GetComponent<SpriteRenderer>().sprite = instance.finalArrowProgress[instance.arrowBits - 1];
 		}
+	}
+
+	IEnumerator LoadScene(string sceneName){
+		transitionAnim.SetTrigger("end");
+		yield return new WaitForSeconds(1.5f);
+		SceneManager.LoadScene(sceneName);
 	}
 }

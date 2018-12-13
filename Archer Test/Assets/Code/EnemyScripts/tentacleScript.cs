@@ -86,13 +86,10 @@ public class tentacleScript : MonoBehaviour
 			col.GetComponent<barrierScript>().BarrierStrength--;
 			rb.velocity = new Vector2(0, 0);
 			segments[0].GetComponent<SpriteRenderer>().color = new Color(255, 0, 0, 255);
-			//DestroyEnemy();
 		}
 		else if (col.tag == "Base")
 		{
-            Debug.Log("BASE VAMPIRE");
             col.GetComponent<BossAndBaseHealth>().DamageWallSlow(1);
-				//TODO: make head vulnerable
 		}
 	}
 
