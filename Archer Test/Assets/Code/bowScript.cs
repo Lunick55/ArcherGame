@@ -5,6 +5,10 @@ using UnityEngine.EventSystems;
 
 public class bowScript : MonoBehaviour 
 {
+	AudioSource bowSound;
+	[SerializeField] AudioClip bowDrawSound;
+	[SerializeField] AudioClip bowFiredSound;
+
 	public float maxVelocity;
 	public float fullDrawTimeInSec;
 
@@ -24,12 +28,11 @@ public class bowScript : MonoBehaviour
 
     bool endGame = false;
 
-	string arrowType = "arrow";//get rid of this later--------------------------------------------<
-
 	// Use this for initialization
 	void Start ()
    {
 		Application.targetFrameRate = 30;
+		bowSound = GetComponent<AudioSource>();
 
 		arrow = Resources.Load("Arrow") as GameObject;
 
@@ -37,7 +40,7 @@ public class bowScript : MonoBehaviour
 
 		EventManager.AddListener("ObjectSelected", Unload);
 		EventManager.AddListener("ObjectPlaced", Reload);
-		EventManager.AddListener("LoadPierceArrow", SetPierce);
+		EventManager.AddListener("GAMEOVER", EndGame);
 
 		fullDrawTimeInFPS = fullDrawTimeInSec * Application.targetFrameRate;
 
@@ -55,10 +58,6 @@ public class bowScript : MonoBehaviour
 			Rotate();
 			GetInput();
 		}
-      if (endGame)
-      {
-         EventManager.FireEvent("GAMEOVER");
-      }
 	}
 
    void Rotate()
@@ -80,8 +79,11 @@ public class bowScript : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(0))
 		{
+			Rest();
 
-      }
+			bowSound.clip = bowDrawSound;
+			bowSound.Play();
+		}
       else if (Input.GetMouseButton(0))
 		{
             anim.SetBool("nocked", true);
@@ -103,33 +105,32 @@ public class bowScript : MonoBehaviour
 		}
 		else if (Input.GetMouseButtonUp(0))
 		{
-			FireArrow();
-			Rest();
-		
+			FireArrow("Arrow");
+			Rest();		
+		}
+		else if (Input.GetMouseButtonUp(1))
+		{
+			Debug.Log("Fire EVERYTHING");
+			if (WorldManager.FireAutoArrow())
+			{
+				drawForce = maxVelocity;
+				FireArrow("Auto");
+			}
 		}
 	}
 
 	//TODO: eventually set this up to fire different arrow types
-	void FireArrow()
+	void FireArrow(string type)
 	{
-		if (arrowType == "arrow")
-		{
-			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
-			newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
-			//drawForce = 0;
-		}
-		if (arrowType == "arrowPierce")
-		{
-			GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
-
-			newArrow.GetComponent<arrowPierceScript>().SetDrawForce(drawForce);
-			//drawForce = 0;
-			arrowType = "arrow";
-			arrow = Resources.Load("Arrow") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
-		}
+		bowSound.clip = bowFiredSound;
+		bowSound.Play();
+		GameObject newArrow = Instantiate(arrow, transform.position, transform.rotation, null) as GameObject;
+		newArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
+		newArrow.tag = type;
+		//drawForce = 0;
 	}
 
-	void FireFinalArrow()
+	void EndGame()
 	{
 		GameObject newFinalArrow = Instantiate(finalArrow, transform.position, transform.rotation, null) as GameObject;
 		newFinalArrow.GetComponent<arrowScript>().SetDrawForce(drawForce);
@@ -159,12 +160,5 @@ public class bowScript : MonoBehaviour
 		ps.Stop();
 		drawForce = 0;
 		anim.SetBool("nocked", false);
-	}
-
-   void SetPierce()
-	{
-		arrowType = "arrowPierce";
-		arrow = Resources.Load("arrowPierce") as GameObject;//remove this. Arrow types should all be preloaded, maybe in array
-		Reload();
 	}
 }

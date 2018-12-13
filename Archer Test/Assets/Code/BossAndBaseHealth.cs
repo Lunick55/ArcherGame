@@ -47,36 +47,42 @@ public class BossAndBaseHealth : MonoBehaviour {
 
 	public void DamageWall(int dmg)
 	{
-		if (health-dmg < 0)
+		if (!WorldManager.isTut)
 		{
-			if (health != 0 && orbIndex > -1)
+			if (health - dmg < 0)
 			{
-				health = 0;
-				//kill kid
-				Destroy(healthOrbs[orbIndex].gameObject);
-                orbIndex--;
+				if (health != 0 && orbIndex > -1)
+				{
+					health = 0;
+					//kill kid
+					Destroy(healthOrbs[orbIndex].gameObject);
+					orbIndex--;
+					return;
+				}
 				return;
 			}
-			return;
-		}
 
-		health -= dmg;
-        //kill kid
-        healthOrbs[orbIndex].GetComponent<Animator>().SetBool("dead", true);
-		Destroy(healthOrbs[orbIndex].gameObject, 0.5f);
-        orbIndex--;
+			health -= dmg;
+			//kill kid
+			healthOrbs[orbIndex].GetComponent<Animator>().SetBool("dead", true);
+			Destroy(healthOrbs[orbIndex].gameObject, 0.5f);
+			orbIndex--;
+		}
 	}
 
 	public void DamageWallSlow(int dmg)
-	{ 
-		if (damageThresh < 0)
+	{
+		if (!WorldManager.isTut)
 		{
-			DamageWall(1);
-			damageThresh = orgDamageThresh;
-		}
-		else 
-		{
-			damageThresh--;
+			if (damageThresh < 0)
+			{
+				DamageWall(1);
+				damageThresh = orgDamageThresh;
+			}
+			else
+			{
+				damageThresh--;
+			}
 		}
 	}
 }

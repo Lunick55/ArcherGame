@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class currencyBarScript : MonoBehaviour {
 
-   [SerializeField] private int sentryCost;
+	[SerializeField] private int autoCost;
+	[SerializeField] private int sentryCost;
    [SerializeField] private int barrierCost;
-   [SerializeField] private int pierceCost;
 	[SerializeField] private int energyPoints;
 	[SerializeField] private int physicalPoints;
 
@@ -53,15 +53,6 @@ public class currencyBarScript : MonoBehaviour {
         {
             WorldManager.DeactivateUIElement(0);
         }
-
-        if (fToI(progress) >= fToI(pierceCost))
-        {
-            WorldManager.ActivateUIElement(2);
-        }
-        else
-        {
-            WorldManager.DeactivateUIElement(2);
-        }
     }
 
     //TODO: Turn these into a single function
@@ -85,6 +76,19 @@ public class currencyBarScript : MonoBehaviour {
 	}
 
 	//TODO: turn these into a single function that take a float Cost
+	public bool TinyCost()
+	{
+		if (progress >= autoCost)
+		{
+			FullCatchUp();
+			canCatchDown = true;
+			canCatchUp = false;
+			progressBar.fillAmount = iToF(progress -= autoCost);
+			return true;
+		}
+
+		return false;
+	}
 	public bool SmallCost()
 	{
 		if (progress >= barrierCost)
@@ -106,19 +110,6 @@ public class currencyBarScript : MonoBehaviour {
 			canCatchDown = true;
 			canCatchUp = false;
 			progressBar.fillAmount = iToF(progress -= sentryCost);
-			return true;
-		}
-
-		return false;
-	}
-	public bool HighCost()
-	{
-		if (progress >= pierceCost)
-		{
-			FullCatchUp();
-			canCatchDown = true;
-			canCatchUp = false;
-			progressBar.fillAmount = iToF(progress -= pierceCost);
 			return true;
 		}
 

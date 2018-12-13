@@ -108,6 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b98fd728d8c42b428abba9cd57496a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
+  deathClip: {fileID: 8300000, guid: 74b19cc4c6870854b9180670a2289d94, type: 3}
 --- !u!212 &212036497018887322
 SpriteRenderer:
   m_ObjectHideFlags: 1

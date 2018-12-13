@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class enemyScript : MonoBehaviour {
 
+	[SerializeField] GameObject audioLinger;
+	[SerializeField] AudioClip deathClip;
+
 	Rigidbody2D rb;
 	Renderer rend;
 	Animator anim;
@@ -39,6 +42,11 @@ public class enemyScript : MonoBehaviour {
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
+		if (col.tag == "Auto")
+		{
+			EventManager.FireEvent("DestroyArrow");
+			DestroyEnemy();
+		}
 		if (col.tag == "Sentry")
 		{
 			col.GetComponent<sentryScript>().DamageDone();
@@ -54,12 +62,12 @@ public class enemyScript : MonoBehaviour {
 
 	void DestroyEnemy()
 	{
-		//rb.isKinematic = false;
 		rb.bodyType = RigidbodyType2D.Static;
 		rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 		anim.SetBool("Dead", true);
-		//anim.speed = 4;
-		//Destroy(gameObject);
+
+		GameObject tempAudio = Instantiate(audioLinger) as GameObject;
+		tempAudio.GetComponent<lingerSound>().setClip(deathClip);
 	}
 
 	public void ChangeSpeed(float newSpeed)

@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class ExplosionScript : MonoBehaviour {
 
-    public GameObject[] healthOrbs;
+    public GameObject[] explosions;
     bool[] started;
 
     // Use this for initialization
     void Start ()
     {
-        healthOrbs = new GameObject[transform.childCount];
+		explosions = new GameObject[transform.childCount];
         started = new bool[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
         {
             float randNum = (int)Random.Range(1, 6);
             randNum *= 0.1667f;
 
-            healthOrbs[i] = transform.GetChild(i).gameObject;
+				explosions[i] = transform.GetChild(i).gameObject;
             started[i] = false;
-            healthOrbs[i].GetComponent<Animator>().SetFloat("offset", randNum);
+				explosions[i].GetComponent<Animator>().SetFloat("offset", randNum);
 
-            healthOrbs[i].SetActive(false);
+				explosions[i].SetActive(false);
         }
 
         EventManager.AddListener("GAMEOVER", PlayExplosion);
@@ -39,14 +39,14 @@ public class ExplosionScript : MonoBehaviour {
         {
 
 
-            healthOrbs[i].SetActive(true);
+				explosions[i].SetActive(true);
 
             if (started[i] == false)
             {
                 float randNum = (int)Random.Range(1, 6);
                 randNum *= 0.1667f;
                 started[i] = true;
-                healthOrbs[i].GetComponent<Animator>().SetFloat("offset", randNum);
+					explosions[i].GetComponent<Animator>().SetFloat("offset", randNum);
             }
         }
     }

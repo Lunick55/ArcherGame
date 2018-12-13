@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class arrowScript : MonoBehaviour {
+public class arrowScript : MonoBehaviour 
+{
+	[SerializeField] GameObject tempArrowSound;
 
 	float drawForce;
 	Rigidbody2D rb;
@@ -41,7 +43,10 @@ public class arrowScript : MonoBehaviour {
 
 	void DestroyArrow()
 	{
-		EventManager.FireEvent("ArrowDestroyed");
+		//if (rend.isVisible)
+		//{ 
+		//	GameObject sound = Instantiate(tempArrowSound) as GameObject;
+		//}
 		Destroy(gameObject);
 	}
 }

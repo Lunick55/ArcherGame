@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class tentacleSegment : MonoBehaviour {
 
-    [SerializeField] private float wiggleSpeed;
+	[SerializeField] AudioClip deathClip;
+	[SerializeField] GameObject audioLinger;
+
+	[SerializeField] private float wiggleSpeed;
     [SerializeField] private float wiggleLength;
     private float orgPosY, orgPosX;
     Rigidbody2D rb;
@@ -55,7 +58,9 @@ public class tentacleSegment : MonoBehaviour {
 
     public void Die()
     {
-        anim.SetBool("dead", true);
+		GameObject tempAudio = Instantiate(audioLinger) as GameObject;
+		tempAudio.GetComponent<lingerSound>().setClip(deathClip);
+		anim.SetBool("dead", true);
     }
 
     public void Delete()

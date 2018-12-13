@@ -667,6 +667,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114418183279599046
@@ -680,6 +683,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114445344060891568
@@ -693,6 +699,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114510139507271556
@@ -718,6 +727,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114636012156403354
@@ -731,6 +743,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114684857359708922
@@ -744,6 +759,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114837333320133400
@@ -757,6 +775,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!114 &114861801964342336
@@ -770,6 +791,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618ee90a86087b044a7782960e11dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: f4af678e55429f24b913264c3b07ff1e, type: 3}
+  audioLinger: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
   wiggleSpeed: 4
   wiggleLength: 0.2
 --- !u!212 &212267009083387094

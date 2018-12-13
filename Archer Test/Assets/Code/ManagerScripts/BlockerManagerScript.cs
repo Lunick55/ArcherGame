@@ -7,8 +7,6 @@ public class BlockerManagerScript : MonoBehaviour {
 
 	public GameObject BlockerBar;
 	private currencyBarScript myBlockerBar;
-	public int sentryCost = 0;
-	public int barrierCost = 0;
 
 	GameObject SentryBlocker;
 	GameObject BarrierBlocker;
@@ -55,9 +53,8 @@ public class BlockerManagerScript : MonoBehaviour {
 				}
 				break;
 			case 3:
-				if (myBlockerBar.HighCost() == true)
+				if (myBlockerBar.TinyCost() == true)
 				{
-					EventManager.FireEvent("LoadPierceArrow");
 					return true;
 				}
 				break;

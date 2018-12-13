@@ -9,6 +9,7 @@ TagManager:
   - Barrier
   - Base
   - Enemy
+  - Auto
   layers:
   - Default
   - TransparentFX

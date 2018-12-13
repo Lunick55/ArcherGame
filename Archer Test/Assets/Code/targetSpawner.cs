@@ -33,17 +33,13 @@ public class targetSpawner : MonoBehaviour {
 
 		if (timer > difficultyCurve.Evaluate(progressThroughWave)*100)
 		{
-			int num;
-			num = Random.Range(0, 2);
 			timer = 0;
 
 			if (progressThroughWave % 10 == 0)
 				SpawnEnemy(tentacle);
 
-			//if (num == 2)
-				SpawnEnemyInteresting(target);
-			//if (num == 2)
-				//SpawnEnemy(tentacle);
+			SpawnEnemyInteresting(target);
+
 		}
 
 		oldTime = (Time.time % waveDuration);

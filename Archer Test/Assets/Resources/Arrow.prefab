@@ -230,6 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6107a0cf81576ba4db0506175ce2e00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempArrowSound: {fileID: 1613247693912856, guid: 2cadcc748f28dde43b71b41014525822,
+    type: 2}
 --- !u!212 &212475320701280572
 SpriteRenderer:
   m_ObjectHideFlags: 1

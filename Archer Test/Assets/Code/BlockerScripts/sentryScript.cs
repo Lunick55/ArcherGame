@@ -4,12 +4,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class sentryScript : MonoBehaviour {
+	
+	[SerializeField] AudioClip sentryPlacedSound;
+	[SerializeField] AudioClip sentryDamagedSound;
+	[SerializeField] AudioClip sentryDeadSound;
+
+	[SerializeField] AudioSource sentrySound;
 
 	Vector2 mousePos;
 	bool activated = false;
 	bool canPlace = true;
-	[SerializeField]
-	int SentryStrength;
+	[SerializeField] int SentryStrength;
 	GameObject[] childSentry;
 	int currSentry = 2;
 
@@ -25,6 +30,8 @@ public class sentryScript : MonoBehaviour {
 		childSentry[0].GetComponent<Animator>().SetFloat("Offset", 0);
 		childSentry[1].GetComponent<Animator>().SetFloat("Offset", 0.33f);
 		childSentry[2].GetComponent<Animator>().SetFloat("Offset", 0.66f);
+
+		sentrySound = GetComponent<AudioSource>();
 	}
 
 	// Update is called once per frame
@@ -60,6 +67,8 @@ public class sentryScript : MonoBehaviour {
 		if (Input.GetMouseButtonUp(0) == true && activated == false && canPlace)
 		{
 			activated = true;
+			sentrySound.clip = sentryPlacedSound;
+			sentrySound.Play();
 			EventManager.FireEvent("ObjectPlaced");
 		}
 

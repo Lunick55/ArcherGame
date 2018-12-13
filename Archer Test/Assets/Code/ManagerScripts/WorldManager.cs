@@ -4,17 +4,28 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorldManager : MonoBehaviour {
+public class WorldManager : MonoBehaviour 
+{
+	[SerializeField] GameObject notEnoughObject;
+	SpriteRenderer notEnoughColor;
+	float notEnoughTimer = 0;
+
+	public static bool tutAbilityActive = false;
+	public static bool tutEndSoon = false;
+	public static bool isTut = false;
 
 	public GameObject BlockerManager;
 	BlockerManagerScript myBlockerManager;
 
+	[SerializeField] int bitsToWin = 0;
 	private int arrowBits = 0; //number to win game
 
 	private static WorldManager worldManager;
 
    [SerializeField] Image[] elementUIImages;
 	[SerializeField] GameObject[] elementUIPulses;
+	[SerializeField] Sprite[] finalArrowProgress;
+	[SerializeField] GameObject finalArrow;
 
 	[SerializeField] Color32 normalColor;
 	[SerializeField] Color32[] abilityColors;
@@ -42,6 +53,11 @@ public class WorldManager : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
+		if (notEnoughObject != null)
+		{
+			notEnoughColor = notEnoughObject.GetComponent<SpriteRenderer>();
+		}
+
 		if (BlockerManager != null)
 		{
 			myBlockerManager = BlockerManager.GetComponent<BlockerManagerScript>();
@@ -52,60 +68,102 @@ public class WorldManager : MonoBehaviour {
 		EventManager.AddListener("LoadMainMenu", LoadMenu);
 		EventManager.AddListener("LoadWin", LoadWin);
 		EventManager.AddListener("LoadLose", LoadLose);
-        EventManager.AddListener("LoadTutorial", LoadTutorial);
-        EventManager.AddListener("LoadTutorial2", LoadTutorial2);
+      EventManager.AddListener("LoadTutorial", LoadTutorial);
+      EventManager.AddListener("LoadTutorial2", LoadTutorial2);
 
-        EventManager.AddListener("ObjectPlaced", Resume);
-
-         //elementUIImages = new Image[3];
+      EventManager.AddListener("ObjectPlaced", Resume);
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+		if (SceneManager.GetActiveScene().name == "TutorialScene")
+		{
+			isTut = true;
+		}
+
 		if (BlockerManager != null)
 		{
-			if (Time.timeScale != 0.1f)
+			if (SceneManager.GetActiveScene().name == "TutorialScene")
 			{
-				if (Input.GetKeyDown(KeyCode.Alpha1))
+				if (tutAbilityActive == true)
 				{
-					ExitBlockerPlaceState(3);//pierce
+					if (Time.timeScale != 0.1f)
+					{
+						if (Input.GetKeyDown(KeyCode.Alpha2))
+						{
+							ExitBlockerPlaceState(2);//barrier
+						}
+						if (Input.GetKeyDown(KeyCode.Alpha1))
+						{
+							ExitBlockerPlaceState(1);//sentry
+						}
+					}
 				}
-				if (Input.GetKeyDown(KeyCode.Alpha3))
+			}
+			else if (Time.timeScale != 0.1f)
+			{
+				if (Input.GetKeyDown(KeyCode.Alpha2))
 				{
 					ExitBlockerPlaceState(2);//barrier
 				}
-				if (Input.GetKeyDown(KeyCode.Alpha2))
+				if (Input.GetKeyDown(KeyCode.Alpha1))
 				{
 					ExitBlockerPlaceState(1);//sentry
 				}
 			}
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                LoadMenu();
-            }
+         if (Input.GetKeyDown(KeyCode.Escape))
+         {
+				LoadMenu();
+         }
 		}
 
-		if (instance.arrowBits > 5)
+		if (instance.arrowBits >= instance.bitsToWin && SceneManager.GetActiveScene().name == "MainGameScene")
 		{
-			Debug.Log("ARROW WIN MAYBE");
+			EventManager.FireEvent("GAMEOVER");
+			GoToEnd();
 		}
+		if (instance.arrowBits >= instance.bitsToWin && SceneManager.GetActiveScene().name == "TutorialScene")
+		{
+			instance.arrowBits = -10000;
+			EventManager.FireEvent("NextBox");
+		}
+
+		if (notEnoughTimer > 0)
+		{
+			notEnoughTimer -= Time.deltaTime;
+			notEnoughColor.color = new Color(Mathf.Abs(Mathf.Sin(Time.time*5)), 0, 0, 1);
+		}
+		else
+		{
+			notEnoughObject.SetActive(false);
+		}
+	}
+
+	public static bool FireAutoArrow()
+	{
+		if (instance.myBlockerManager.SpawnBlocker(3) == true)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	private static void ExitBlockerPlaceState(int blockType)
 	{
 		if (instance.myBlockerManager.SpawnBlocker(blockType) == true)
 		{
-            if (blockType != 3)
-            {
-                instance.Pause();
-                EventManager.FireEvent("ObjectSelected");
-            }
+			if (blockType != 3)
+			{
+				instance.Pause();
+				EventManager.FireEvent("ObjectSelected");
+			}
 		}
-      else
-      {
-			Debug.Log("NOT ENOUGH");
-      }
+		else
+		{
+			instance.notEnoughTimer = 1;
+			instance.notEnoughObject.SetActive(true);
+		}
 	}
 
 	void StartGame()
@@ -169,6 +227,7 @@ public class WorldManager : MonoBehaviour {
 
 	public static void ActivateUIElement(int i)
 	{
+		Debug.Log("ACTIVATE");
 		instance.elementUIImages[i].color = instance.abilityColors[i];
 		instance.elementUIPulses[i].SetActive(true);
    }
@@ -182,6 +241,15 @@ public class WorldManager : MonoBehaviour {
 
 	public static void arrowBitFound()
 	{
-		instance.arrowBits++;
+		if (SceneManager.GetActiveScene().name == "TutorialScene" && tutEndSoon)
+		{
+			instance.arrowBits++;
+			instance.finalArrow.GetComponent<SpriteRenderer>().sprite = instance.finalArrowProgress[0];
+		}
+		else 
+		{
+			instance.arrowBits++;
+			instance.finalArrow.GetComponent<SpriteRenderer>().sprite = instance.finalArrowProgress[instance.arrowBits - 1];
+		}
 	}
 }

@@ -55,6 +55,17 @@ public class tentacleScript : MonoBehaviour
 			EventManager.FireEvent("DestroyArrow");
 			DestroyEnemy();
 		}
+		if (col.tag == "Auto")
+		{
+			if (vulnerable)
+			{
+				WorldManager.arrowBitFound();
+			}
+
+			rb.velocity = new Vector2(0, 0);
+			EventManager.FireEvent("DestroyArrow");
+			DestroyEnemy();
+		}
 		if (col.tag == "Barrier")
 		{
 			rb.velocity = new Vector2(0, 0);
